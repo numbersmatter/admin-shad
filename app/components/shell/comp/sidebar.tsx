@@ -149,7 +149,7 @@ export function DesktopSideBar(
                         className={({ isActive, }) =>
                           cn(
                             isActive
-                              ? ""
+                              ? "text-primary-foreground bg-primary/80"
                               : "",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 text-accent-foreground hover:bg-secondary/80"
                           )

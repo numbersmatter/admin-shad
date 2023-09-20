@@ -11,25 +11,14 @@ import {
 import { DesktopSideBar, MobileSideBar } from "~/components/shell/comp/sidebar";
 
 
-
-
-
-
-// @ts-ignore
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function AppBaseLayout() {
+export function StandardShell({
+  children
+}: {
+  children: React.ReactNode
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-
-
-
-
-
   return (
-    <div id="AppBaseLayout" className=" h-full w-full">
+    <div id="AppShell" className=" h-full w-full">
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog
           as="div"
@@ -89,27 +78,24 @@ export default function AppBaseLayout() {
           </div>
         </Dialog>
       </Transition.Root>
-
       <DesktopSideBar />
-
-
       <div className="h-full flex flex-col  lg:pl-64">
-        <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-slate-900 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+        <div className="sticky top-0 z-40 flex items-center gap-x-6  px-4 py-4 shadow-sm sm:px-6 lg:hidden">
           <button
             type="button"
-            className="-m-2.5 p-2.5 text-slate-300 lg:hidden"
+            className="-m-2.5 p-2.5  lg:hidden"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="sr-only">Open sidebar</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
-          <div className="flex-1 text-sm font-semibold leading-6 text-slate-50">
+          <div className="flex-1 text-sm font-semibold leading-6 ">
             Furbrush
           </div>
           <Link to="/logout">
-            <div className="flex items-center decoration-2 gap-x-1 py-3 text-lg underline underline-offset-4 font-semibold leading-6 text-slate-400 hover:bg-gray-50">
+            <div className="flex items-center decoration-2 gap-x-1 py-3 text-lg underline underline-offset-4 font-semibold leading-6 ">
               <ArrowLeftOnRectangleIcon
-                className="flex-shrink-0 h-6 w-6 text-slate-400"
+                className="flex-shrink-0 h-6 w-6 "
                 aria-hidden="true"
               />
               Logout
@@ -117,17 +103,10 @@ export default function AppBaseLayout() {
           </Link>
         </div>
         <div className="flex-1" >
-          <Outlet />
-        </div>
-        <div className="flex flex-col border-t-4 border-slate-500 items-center justify-center h-28">
-          <div className="text-3xl font-semibold text-slate-100">
-            Welcome to Furbrush
-          </div>
+          {children}
         </div>
       </div>
     </div>
-  );
+  )
+
 }
-
-
-
