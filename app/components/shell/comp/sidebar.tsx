@@ -198,7 +198,7 @@ export function DesktopSideBar(
 export function MobileSideBar() {
   return (
     <>
-      <div className="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-2">
+      <div className="flex grow flex-col bg-background  gap-y-5 overflow-y-auto px-6 pb-2">
         <div className="flex h-16 shrink-0 items-center">
           <img
             className="h-8 w-auto"
@@ -218,9 +218,9 @@ export function MobileSideBar() {
                       className={({ isActive, }) =>
                         cn(
                           isActive
-                            ? "bg-slate-800 text-slate-100"
-                            : "text-slate-300 hover:text-slate-100 hover:bg-slate-700",
-                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                            ? "text-primary-foreground bg-primary/80"
+                            : "",
+                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 text-accent-foreground hover:bg-secondary/80"
                         )
                       }
                     >
