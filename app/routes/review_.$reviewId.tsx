@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
 import { Fragment, useState } from "react";
 import { DisplayResponse } from "~/components/review/comp/display-response";
 import { ProductTags } from "~/components/review/comp/product-tags";
@@ -64,6 +64,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ReviewIdRoute() {
   const { requests } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   const reviewListCards = requests.map((request) => (
     {
@@ -133,6 +134,14 @@ export default function ReviewIdRoute() {
       <main className=" flex-1 bg-muted overflow-y-auto ">
         <div className="container h-full mx-auto p-0 xl:px-8 xl:py-4">
           <Card className="rounded-none xl:rounded-lg">
+            <div className="flex justify-between items-center px-4 py-2 border-b border-muted-foreground md:hidden">
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/review")}
+              >
+                Back
+              </Button>
+            </div>
             <CardHeader>
               <CardTitle>Standard Commission</CardTitle>
               <CardDescription>
