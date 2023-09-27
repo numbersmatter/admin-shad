@@ -2,11 +2,15 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
+import { DisplayResponse } from "~/components/review/comp/display-response";
 import { ProductTags } from "~/components/review/comp/product-tags";
 import { ReviewList } from "~/components/review/comp/review-list";
+import ReviewStatusDropDown from "~/components/review/comp/review-status-dropdown";
 import { StandardShell } from "~/components/shell/shell";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import { cn } from "~/lib/utils";
 
 
@@ -94,8 +98,26 @@ export default function ReviewIdRoute() {
       value: "2021-09-15"
     },
     {
-      label: "Price",
-      value: "50"
+      label: "Character References",
+      value: "",
+      images: [
+        {
+          id: "1",
+          url: "https://res.cloudinary.com/db1vvwzaa/image/upload/v1694560413/Yv9MRp37B72XaMjPExK6/wtc4oytzs1bzrqnuqsmq.png",
+          name: "Mikasa Ackerman",
+        },
+        {
+          id: "2",
+          url: "https://res.cloudinary.com/db1vvwzaa/image/upload/v1694560423/Yv9MRp37B72XaMjPExK6/zxo737yjelk9uit93nq6.png",
+          name: "Mikasa Ackerman",
+        },
+        {
+          id: "2",
+          url: "https://res.cloudinary.com/db1vvwzaa/image/upload/v1694560435/Yv9MRp37B72XaMjPExK6/bfiojjyrrmekypdt3tzv.jpg",
+          name: "Mikasa Ackerman",
+        },
+
+      ]
     },
     {
       label: "Email",
@@ -116,6 +138,10 @@ export default function ReviewIdRoute() {
               <CardDescription>
                 Calkling-crows-called-callously
               </CardDescription>
+              <div className="flex justify-start items-center gap-2">
+                <p className="text-lg font-medium">Current Status:</p>
+                <ReviewStatusDropDown />
+              </div>
             </CardHeader>
             <CardContent className="px-0 md:px-2">
               <ProductTags size="large" tags={reviewListCards[0].tags} />
@@ -123,17 +149,20 @@ export default function ReviewIdRoute() {
                 <dl className="divide-y divide-muted-foreground">
                   {
                     responses.map((response, index) => (
-                      <DisplayResponse key={response.label} response={response} index={index} />
+                      <DisplayResponse
+                        key={index}
+                        response={response}
+                      />
                     ))
                   }
                 </dl>
               </div>
             </CardContent>
             <CardFooter>
-              <StatusListBox
+              {/* <StatusListBox
                 reviewStatus="review"
                 proposalId={reviewListCards[0].id}
-              />
+              /> */}
 
             </CardFooter>
 
@@ -145,23 +174,7 @@ export default function ReviewIdRoute() {
 }
 
 
-function DisplayResponse({
-  response, index
-}: {
-  response: { label: string, value: string },
-  index: number
-}) {
-  return (
-    <div key={index} className=" px-4 py-6 xl:grid xl:grid-cols-3 xl:gap-4 xl:px-3">
-      <dt className="text-lg text-slate-200 underline underline-offset-2 font-semibold leading-6 ">
-        {response.label} :
-      </dt>
-      <dd className="mt-1 text-slate-100 text-base font-medium leading-6 sm:col-span-2 sm:mt-0">
-        {response.value ?? "No response"}
-      </dd>
-    </div>
-  )
-}
+
 
 interface StatusOption {
   title: string;
