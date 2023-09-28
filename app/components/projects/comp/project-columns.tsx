@@ -1,6 +1,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "~/components/ui/button"
 import { ProjectStatuses } from "~/server/database/projects.server"
+import { ProjectsActionsMenu } from "./project-actions-menu"
+import { ProjectStatus } from "./project-status"
 
 
 
@@ -31,7 +33,7 @@ export const projectsTestData: ProjectTableRow[] = [
     completedPoints: 30,
     totalPoints: 100,
     amount: 100,
-    status: "active",
+    status: "canceled",
   },
   {
     id: "kisdjmiom",
@@ -39,11 +41,11 @@ export const projectsTestData: ProjectTableRow[] = [
     completedPoints: 50,
     totalPoints: 100,
     amount: 100,
-    status: "active",
+    status: "inactive",
   },
   {
     id: "728egfjdpagijr",
-    title: "Commission for Terry",
+    title: "Commission for Terry who is always asking about it.",
     completedPoints: 20,
     totalPoints: 100,
     amount: 100,
@@ -52,7 +54,7 @@ export const projectsTestData: ProjectTableRow[] = [
 ]
 
 
-export const projectsColumns: ColumnDef<ProjectTableRow>[] = [
+export const projectsColumnsLong: ColumnDef<ProjectTableRow>[] = [
   {
     accessorKey: "title",
     header: "Title",
@@ -76,10 +78,11 @@ export const projectsColumns: ColumnDef<ProjectTableRow>[] = [
       return (
         <div className="text-center">
           <Button
-            variant={"ghost"}
+            variant="ghost"
+            className=""
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Points
+            <span className="text-lg font-medium">Points</span>
           </Button>
         </div>
 
@@ -103,13 +106,51 @@ export const projectsColumns: ColumnDef<ProjectTableRow>[] = [
       )
     }
   },
-  {
-    accessorKey: "totalPoints",
-    header: "Total",
-  },
+
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => {
+      return (
+        <ProjectStatus status={row.original.status} />
+      )
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return (
+        <ProjectsActionsMenu projectId={row.original.id} />
+      )
+    },
+  },
+
+]
+
+export const projectsColumnsShort: ColumnDef<ProjectTableRow>[] = [
+  {
+    accessorKey: "title",
+    header: "Title",
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-col gap-1">
+          <div className="font-medium">{row.original.title}</div>
+          <div className="text-xs text-muted-foreground">
+            {row.original.completedPoints} / {row.original.totalPoints} points
+          </div>
+          <div><ProjectStatus status={row.original.status} /></div>
+        </div>
+      )
+    }
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return (
+        <ProjectsActionsMenu projectId={row.original.id} />
+      )
+    },
   },
 ]
+
 

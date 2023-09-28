@@ -44,7 +44,7 @@ export function ProjectDataTable<TData, TValue>({
   return (
 
     <Table>
-      <TableHeader>
+      <TableHeader className="">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => {
