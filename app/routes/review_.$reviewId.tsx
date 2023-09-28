@@ -132,8 +132,8 @@ export default function ReviewIdRoute() {
         <ReviewList requests={reviewListCards} />
       </nav>
       <main className=" flex-1 bg-muted overflow-y-auto ">
-        <div className="container h-full mx-auto p-0 xl:px-8 xl:py-4">
-          <Card className="rounded-none xl:rounded-lg">
+        <div className="container mx-auto px-0 xl:px-8 xl:py-4">
+          <Card className="rounded-none border-2 border-b-muted-foreground xl:rounded-lg xl:border-muted-foreground">
             <div className="flex justify-between items-center px-4 py-2 border-b border-muted-foreground md:hidden">
               <Button
                 variant="secondary"
@@ -176,6 +176,9 @@ export default function ReviewIdRoute() {
             </CardFooter>
 
           </Card>
+        </div>
+        <div className=" bg-muted h-[30px]">
+
         </div>
       </main>
     </StandardShell>
