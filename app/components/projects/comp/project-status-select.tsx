@@ -1,42 +1,4 @@
 
-import { cn } from "~/lib/utils"
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/components/ui/avatar"
-import { Button } from "~/components/ui/button"
-// import {
-//   Command,
-//   CommandEmpty,
-//   CommandGroup,
-//   CommandInput,
-//   CommandItem,
-//   CommandList,
-//   CommandSeparator,
-// } from "@/registry/new-york/ui/command"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select"
-import { useState } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -51,8 +13,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
-import { User } from "lucide-react"
-import { ProjectStatuses } from "~/server/database/projects.server"
+import { Ruler, User } from "lucide-react"
+import { ProjectStatuses, } from "~/server/database/projects.server"
 import { ProjectStatus } from "./project-status"
 
 
@@ -61,7 +23,15 @@ export interface ProjectStatusSelectProps {
 }
 
 
-export default function ProjectStatusSelect({ status }: ProjectStatusSelectProps) {
+export default function ProjectStatusSelect(
+  { status }: ProjectStatusSelectProps
+) {
+  const projectStatuses: ProjectStatuses[] = [
+    "active",
+    "canceled",
+    "completed",
+    "inactive",
+  ];
 
   return (
     <DropdownMenu>
@@ -71,18 +41,24 @@ export default function ProjectStatusSelect({ status }: ProjectStatusSelectProps
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <div className="flex items-center gap-x-4">
+            <Ruler className="mr-2 h-4 w-4" />
+            <p>
+              Select Status
+            </p>
+          </div>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-
+          {
+            projectStatuses.map((status) => (
+              <DropdownMenuItem key={status}>
+                <ProjectStatus status={status} size="large" />
+              </DropdownMenuItem>
+            ))
+          }
         </DropdownMenuGroup>
-
-
       </DropdownMenuContent>
     </DropdownMenu>
 

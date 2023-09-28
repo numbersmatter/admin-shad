@@ -13,7 +13,12 @@ export interface ProjectTask {
 
 export type ProjectStatuses = "active" | "canceled" | "completed" | "inactive";
 
-export const projectStatuses = ["active", "canceled", "completed", "inactive"];
+export const projectStatuses: ProjectStatuses[] = [
+  "active",
+  "canceled",
+  "completed",
+  "inactive",
+];
 
 export interface ProjectStartFields {
   title: string;

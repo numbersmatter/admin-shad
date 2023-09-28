@@ -10,6 +10,7 @@ import {
 import styles from "./tailwind.css";
 import { Theme, ThemeProvider, useTheme } from "./lib/theme-provider";
 import clsx from "clsx";
+import { Toaster } from "./components/ui/toaster";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styles },
@@ -30,6 +31,7 @@ function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Toaster />
       </body>
     </html>
   );
