@@ -10,7 +10,7 @@ export function ProductActionsMenu({
 }: {
   productId: string
 }) {
-  const productLink = `/projects/${productId}`
+  const productLink = `/products/${productId}`
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -28,7 +28,7 @@ export function ProductActionsMenu({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <Link to={productLink}>
-          <DropdownMenuItem>Go to Project</DropdownMenuItem>
+          <DropdownMenuItem>Go to Product</DropdownMenuItem>
         </Link>
       </DropdownMenuContent>
     </DropdownMenu>

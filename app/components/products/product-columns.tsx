@@ -1,6 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ProjectsActionsMenu } from "../projects/comp/project-actions-menu";
 import { CheckCircle, XCircleIcon } from "lucide-react";
+import { ProductActionsMenu } from "./comp/product-action-menu";
 
 
 type ProductRow = {
@@ -77,7 +78,7 @@ export const productColumnsShort: ColumnDef<ProductRow>[] = [
     id: "actions",
     cell: ({ row }) => {
       return (
-        <ProjectsActionsMenu projectId={row.original.id} />
+        <ProductActionsMenu productId={row.original.id} />
       )
     },
   },
@@ -126,7 +127,7 @@ export const productColumnsLong: ColumnDef<ProductRow>[] = [
     id: "actions",
     cell: ({ row }) => {
       return (
-        <ProjectsActionsMenu projectId={row.original.id} />
+        <ProductActionsMenu productId={row.original.id} />
       )
     },
   },
