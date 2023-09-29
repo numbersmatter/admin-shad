@@ -51,12 +51,12 @@ export function ProjectEditDialogue({
 
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-4 ">
-              <Label htmlFor="name" className="sm:text-right">
+              <Label htmlFor="title" className="sm:text-right">
                 Project Title
               </Label>
               <Input
-                id="name"
-                name="name"
+                id="title"
+                name="title"
                 defaultValue={title}
                 className="col-span-1 sm:col-span-3"
               />
