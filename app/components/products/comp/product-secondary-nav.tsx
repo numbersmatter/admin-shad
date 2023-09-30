@@ -21,19 +21,19 @@ import {
 const tabs = [
   {
     id: "index",
-    name: "Product Basics",
+    name: "Basics",
     to: ``,
     end: true,
   },
   {
     id: `images`,
-    name: "Product Images",
+    name: "Images",
     to: `/images`,
     end: false,
   },
   {
     id: `details`,
-    name: "Product Details",
+    name: "Details",
     to: `/details`,
     end: false,
   },
@@ -45,7 +45,7 @@ const tabs = [
   },
   {
     id: `form`,
-    name: "Product Form",
+    name: "Form",
     to: `/form`,
     end: false,
   },
