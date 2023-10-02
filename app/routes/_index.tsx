@@ -4,8 +4,15 @@ import { StandardShell } from "~/components/shell/shell";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Furbrush" },
+    {
+      property: "og:title",
+      content: "Furbrush",
+    },
+    {
+      name: "description",
+      content: "This app is made by artist for artists.",
+    },
   ];
 };
 

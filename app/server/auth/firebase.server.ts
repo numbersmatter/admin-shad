@@ -2,13 +2,11 @@ import {
   getApps as getServerApps,
   initializeApp as initializeServerApp,
   cert as serverCert,
-  
 } from "firebase-admin/app";
-import {firestore} from "firebase-admin"
-import { getAuth as getServerAuth,  } from "firebase-admin/auth";
+// import {firestore} from "firebase-admin"
+import { getAuth as getServerAuth } from "firebase-admin/auth";
 
 import * as firebaseRest from "./firebase-rest";
-
 
 // Warning: though getRestConfig is only run server side, its return value may be sent to the client
 export const getRestConfig = (): {
@@ -41,7 +39,7 @@ if (getServerApps().length === 0) {
     process.env.FIRESTORE_EMULATOR_HOST = "localhost:8080";
     process.env.FIREBASE_AUTH_EMULATOR_HOST = "localhost:9099";
     config = {
-      projectId: process.env.PROJECT_ID ,
+      projectId: process.env.PROJECT_ID,
     };
   } else if (!process.env.SERVICE_ACCOUNT) {
     throw new Error("Missing SERVICE_ACCOUNT environment variable");
@@ -57,8 +55,6 @@ if (getServerApps().length === 0) {
   }
   initializeServerApp(config);
 }
-
-
 
 const signInWithPassword = async (email: string, password: string) => {
   const signInResponse = await firebaseRest.signInWithPassword(
@@ -81,6 +77,3 @@ export const auth = {
   server: getServerAuth(),
   signInWithPassword,
 };
-
-export const db = firestore()
-
