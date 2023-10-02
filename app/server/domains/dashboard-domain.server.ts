@@ -180,6 +180,8 @@ export const getDashboardData = async ({ storeId }: { storeId: string }) => {
     thisMonthTasks: numberOfTasksCompletedThisMonth.toString(),
     lastMonthEarned: lastMonthEarned.toFixed(2).toString(),
     thisMonthEarned: thisMonthEarned.toFixed(2).toString(),
+    lastMonthEarnedAmount: Math.round(lastMonthEarned),
+    thisMonthEarnedAmount: Math.round(thisMonthEarned),
   };
 
   const dashboardProjects = projectsWorked;

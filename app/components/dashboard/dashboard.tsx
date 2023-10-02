@@ -39,10 +39,14 @@ const cards = [
 
 
 
-export function Dashboard() {
+export function Dashboard({
+  data,
+}: {
+  data: any
+}) {
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className=" space-y-4 p-8 pt-6">
       <div className="flex  flex-col items-center justify-between space-y-2 md:flex-row">
         <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
         <div className="flex items-center space-x-2">
@@ -52,7 +56,7 @@ export function Dashboard() {
       <Tabs defaultValue="overview" className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="analytics" disabled>
+          {/* <TabsTrigger value="analytics" disabled>
             Analytics
           </TabsTrigger>
           <TabsTrigger value="reports" disabled>
@@ -60,7 +64,7 @@ export function Dashboard() {
           </TabsTrigger>
           <TabsTrigger value="notifications" disabled>
             Notifications
-          </TabsTrigger>
+          </TabsTrigger> */}
         </TabsList>
         <TabsContent value="overview" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -77,7 +81,9 @@ export function Dashboard() {
                 <CardTitle>Overview</CardTitle>
               </CardHeader>
               <CardContent className="pl-2">
-                <Overview />
+                <Overview
+                  data={data}
+                />
               </CardContent>
             </Card>
             <Card className="col-span-3">

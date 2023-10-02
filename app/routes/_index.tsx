@@ -1,9 +1,15 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-run/node";
-import { MetaFunction } from "@remix-run/react";
+import { MetaFunction, useLoaderData } from "@remix-run/react";
+import { DashboardHeader } from "~/components/dashboard/comp/dashboard-header";
+import { RecentProjects } from "~/components/dashboard/comp/recent-projects";
 import { Dashboard } from "~/components/dashboard/dashboard";
 import { StandardShell } from "~/components/shell/shell";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { dashboardActions, getDashboardData } from "~/server/domains/dashboard-domain.server";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import { InfoCard } from "~/components/dashboard/comp/info-card";
+import { ChartBarIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { Overview } from "~/components/dashboard/comp/overview";
 
 
 export const meta: MetaFunction = () => {
@@ -24,11 +30,36 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { storeId } = await intializeWorkSession(request);
 
   const {
-    storeStatus, productsList, dashboardData, dashboardProjects
+    storeStatus, productsList, dashboardData, dashboardProjects,
   } = await getDashboardData({ storeId });
 
+  const cards = [
+    {
 
-  return json({ storeStatus, productsList, dashboardData, dashboardProjects });
+    }
+  ]
+
+  const dashData = [
+    {
+      month: "July",
+      total: dashboardData.lastMonthEarnedAmount
+    },
+    {
+      month: "August",
+      total: dashboardData.lastMonthEarnedAmount
+    },
+    {
+      month: "September",
+      total: dashboardData.lastMonthEarnedAmount
+    },
+    {
+      month: "October",
+      total: 0,
+    }
+  ]
+
+
+  return json({ storeStatus, productsList, dashboardData, dashboardProjects, dashData });
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -69,9 +100,57 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 
 export default function Index() {
+  const { dashData, dashboardData, dashboardProjects } = useLoaderData<typeof loader>();
+
+  const cards = [
+    {
+      title: "Last Month Earned",
+      main: `$${dashboardData.lastMonthEarnedAmount}`,
+      secondary: "",
+      icon: <UserCircleIcon className="h-4 w-4 text-muted-foreground" />
+    },
+    {
+      title: "This Month Earned",
+      main: `$${dashboardData.thisMonthEarnedAmount}`,
+      secondary: "",
+      icon: <ChartBarIcon className="h-4 w-4 text-muted-foreground" />
+    },
+  ]
+
   return (
     <StandardShell>
-      <Dashboard />
+      <div className="flex-1 overflow-y-auto">
+        <DashboardHeader>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {
+              cards.map((card, i) => (
+                <InfoCard key={i} {...card} />
+              ))
+            }
+
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <Overview data={dashData} />
+              </CardContent>
+            </Card>
+            <Card className="col-span-4">
+              <CardHeader>
+                <CardTitle>Recent Projects</CardTitle>
+              </CardHeader>
+              <CardContent className="pl-2">
+                <RecentProjects recentProjects={dashboardProjects} />
+              </CardContent>
+            </Card>
+
+          </div>
+        </DashboardHeader>
+      </div>
     </StandardShell>
   );
 }
