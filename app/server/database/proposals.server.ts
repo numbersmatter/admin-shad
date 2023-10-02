@@ -6,12 +6,21 @@ import {
 import { dataPoint, mainDb } from "./mainDb.server";
 import type { RequestForm } from "./requestForm.server";
 
-export interface Proposal extends RequestForm {
+export interface Proposal extends Omit<RequestForm, "status"> {
+  submittedAt: Timestamp;
+  reviewStatus: "review" | "approved" | "hold" | "declined";
+  archived: boolean;
+}
+export interface ProposalWrite extends RequestForm {
   submittedAt: Timestamp | FieldValue;
   reviewStatus: "review" | "approved" | "hold" | "declined";
   archived: boolean;
 }
-const proposalCollection = ({ storeId }: { storeId: string }) =>
+
+const proposalCollectionWrite = ({ storeId }: { storeId: string }) =>
+  dataPoint<ProposalWrite>(`${mainDb}/stores/${storeId}/proposals`);
+
+const proposalCollectionRead = ({ storeId }: { storeId: string }) =>
   dataPoint<Proposal>(`${mainDb}/stores/${storeId}/proposals`);
 
 // Proposal CRUD
@@ -24,14 +33,14 @@ export const createProposal = async ({
 }) => {
   const proposalId = proposalData.id;
 
-  const writeData: Proposal = {
+  const writeData: ProposalWrite = {
     ...proposalData,
     reviewStatus: "review",
     archived: false,
     submittedAt: FieldValue.serverTimestamp(),
   };
 
-  await proposalCollection({ storeId }).doc(proposalId).set(writeData);
+  await proposalCollectionWrite({ storeId }).doc(proposalId).set(writeData);
   return proposalId;
 };
 
@@ -42,7 +51,7 @@ export const readProposal = async ({
   storeId: string;
   proposalId: string;
 }) => {
-  const proposalData = await proposalCollection({ storeId })
+  const proposalData = await proposalCollectionRead({ storeId })
     .doc(proposalId)
     .get();
   return proposalData.data();
@@ -57,7 +66,9 @@ export const updateProposal = async ({
   proposalId: string;
   proposalData: DocumentData;
 }) => {
-  await proposalCollection({ storeId }).doc(proposalId).update(proposalData);
+  await proposalCollectionRead({ storeId })
+    .doc(proposalId)
+    .update(proposalData);
   return proposalId;
 };
 
@@ -68,12 +79,12 @@ export const deleteProposal = async ({
   storeId: string;
   proposalId: string;
 }) => {
-  await proposalCollection({ storeId }).doc(proposalId).delete();
+  await proposalCollectionRead({ storeId }).doc(proposalId).delete();
   return proposalId;
 };
 
 export const reviewProposals = async ({ storeId }: { storeId: string }) => {
-  const proposals = await proposalCollection({ storeId })
+  const proposals = await proposalCollectionRead({ storeId })
     .where("archived", "==", false)
     .get();
   return proposals.docs.map((proposal) => proposal.data());

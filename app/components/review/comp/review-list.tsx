@@ -1,12 +1,13 @@
 import { NavLink, useParams } from "@remix-run/react";
 import type { ReviewListCardData } from "./review-list-card";
 import { ReviewListCard } from "./review-list-card";
+import { ProposalCard } from "~/server/domains/domain-types";
 
 
 export function ReviewList({
   requests
 }: {
-  requests: ReviewListCardData[]
+  requests: ProposalCard[]
 }) {
   const params = useParams();
   const reviewId = params.reviewId ?? "none";

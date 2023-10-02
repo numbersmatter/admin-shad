@@ -54,7 +54,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
     {
       month: "October",
-      total: 0,
+      total: 1400,
     }
   ]
 

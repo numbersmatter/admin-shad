@@ -1,4 +1,6 @@
+import { ReviewStatus } from "~/routes/review_.$reviewId";
 import { ProductOptionDisplay } from "../database/product.server";
+import { FormTemplate } from "../database/formTemplate.server";
 
 export interface ImageUploadFormData {
   type: string;
@@ -55,4 +57,50 @@ export interface FieldSettingsData {
   placeholder: string;
   fieldId: string;
   options: { name: string; value: string }[];
+}
+
+// Review
+
+export interface Tag {
+  text: string;
+  color: string;
+  id: string;
+  optionId?: string;
+  index: number;
+}
+
+export interface ProposalCard {
+  humanId: string;
+  id: string;
+  productId: string;
+  productName: string;
+  submittedAtDate: Date;
+  reviewStatus: ReviewStatus;
+  submittedAtString: string;
+  tags: Tag[];
+}
+
+export interface ImageUpload {
+  id: string;
+  url: string;
+  name: string;
+}
+
+export interface ProposalReview {
+  formContent: FormTemplate;
+  userResponse: { [key: string]: string };
+  userImages: { [key: string]: ImageUpload[] };
+  productName: string;
+  humanId: string;
+  tags: Tag[];
+  id: string;
+  reviewStatus: ReviewStatus;
+  displayFields: DisplayField[];
+}
+
+export interface DisplayField {
+  label: string;
+  value: string;
+  type: string;
+  id: string;
 }

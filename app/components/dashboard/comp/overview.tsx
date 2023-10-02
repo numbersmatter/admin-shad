@@ -1,4 +1,4 @@
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 const data = [
   {
@@ -66,6 +66,7 @@ export function Overview({
           tickLine={false}
           axisLine={false}
         />
+        <Tooltip />
         <YAxis
           stroke="#888888"
           fontSize={12}

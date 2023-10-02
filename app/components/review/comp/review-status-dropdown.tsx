@@ -28,8 +28,12 @@ const statusOptions: StatusOption[] = [
   { title: 'Declined', description: "This idea is not for me at the moment", value: "declined" },
 ]
 
-export default function ReviewStatusDropDown() {
-  const [status, setStatus] = useState<ReviewStatus>("review")
+export default function ReviewStatusDropDown({
+  reviewStatus,
+}: {
+  reviewStatus: ReviewStatus;
+}) {
+  const [status, setStatus] = useState<ReviewStatus>(reviewStatus)
 
   const selectedText = statusOptions.find((option) => option.value === status)?.title ?? "Unset Status";
 
@@ -45,7 +49,7 @@ export default function ReviewStatusDropDown() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button variant="link" className={`${statuses[status]}  min-w-[150px]`}>
           {selectedText}
         </Button>

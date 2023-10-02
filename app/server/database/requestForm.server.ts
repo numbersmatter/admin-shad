@@ -2,6 +2,8 @@ import { DocumentData, FieldValue, Timestamp } from "firebase-admin/firestore";
 import { FormTemplate } from "./formTemplate.server";
 import { dataPoint, mainDb } from "./mainDb.server";
 import { ProductOptionDisplay } from "./product.server";
+import { ImageUpload } from "../domains/domain-types";
+import { makeRandomHumanReadableId } from "../domains/human-id";
 
 export interface RequestForm {
   id: string;
