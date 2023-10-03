@@ -104,3 +104,22 @@ export interface DisplayField {
   type: string;
   id: string;
 }
+
+// Projects
+export interface Item {
+  id: string;
+  title: string;
+  to: string;
+  pillText: string;
+  secondaryText: string;
+  points: string;
+  totalPoints: string;
+  linkText: string;
+}
+
+export interface ProjectSummary {
+  amount: number;
+  earned: number;
+  client?: string;
+  invoiced?: number;
+}

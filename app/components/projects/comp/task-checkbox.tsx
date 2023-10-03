@@ -27,6 +27,8 @@ export function TaskCheckBox({
   return (
     <fetcher.Form method="POST">
       <Checkbox
+        id={taskId}
+        name="completed"
         defaultChecked={checked}
         disabled={isFetching}
         onCheckedChange={(checked) => {

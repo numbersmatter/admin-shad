@@ -7,7 +7,7 @@ import { ProjectStatus } from "./project-status"
 
 
 
-type ProjectTableRow = {
+export type ProjectTableRow = {
   id: string,
   title: string,
   completedPoints: number,
