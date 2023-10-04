@@ -7,6 +7,15 @@ const converter = <T>() => ({
   fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as T,
 });
 
+const convertDifferentReadAndWrite = <T, U>() => ({
+  toFirestore: (data: T) => data,
+  fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as U,
+});
+
+// export const dataPointDifferentReadAndWrite = <T, U>(
+//   collectionPath: string
+// ) => getFirestore().collection(collectionPath).withConverter(convertDifferentReadAndWrite<T, U>());
+
 // helper to apply converter to multiple collections
 export const dataPoint = <T extends FirebaseFirestore.DocumentData>(
   collectionPath: string

@@ -9,12 +9,14 @@ import { useToast } from "~/components/ui/use-toast";
 import { ProjectDetails } from "~/components/projects/comp/project-details";
 import { ProjectEditDialogue } from "~/components/projects/comp/project-edit-dialogue";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { getProjectData, getProjectItemsByStatus, updateProjectMutation } from "~/server/domains/projectsDomain.server";
+import { addTaskToProjectMutation, getProjectData, getProjectItemsByStatus, toggleTaskMutation, updateProjectMutation } from "~/server/domains/projectsDomain.server";
 import { ProjectStatuses, projectStatuses } from "~/server/database/projects.server";
 import { ProjectTaskList } from "~/components/projects/comp/project-task-list";
 import { projectTaskColumnsLong, projectTaskColumnsShort } from "~/components/projects/comp/task-columns";
 import { formAction } from "~/server/form-actions/form-action.server";
-import { EditProjectSchema } from "~/server/domains/project-schemas";
+import { EditProjectSchema, NewTaskSchema, ToggleTaskSchema } from "~/server/domains/project-schemas";
+import { AddTaskDialog } from "~/components/projects/comp/add-task-dialog";
+import { ProjectProposalCard } from "~/components/projects/comp/project-proposal-card";
 
 
 
@@ -27,13 +29,23 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   switch (action) {
     case "toogleTask":
-      return json({ status: "ok", message: "Task toggled" }, { status: 200 });
+      return formAction({
+        request,
+        mutation: toggleTaskMutation({ storeId, projectId }),
+        schema: ToggleTaskSchema,
+      })
     case "updateBasic":
       return formAction({
         request,
         mutation: updateProjectMutation({ storeId, projectId }),
         schema: EditProjectSchema,
       });
+    case "addTask":
+      return formAction({
+        request,
+        mutation: addTaskToProjectMutation({ storeId, projectId, uuid: uid }),
+        schema: NewTaskSchema
+      })
     default:
       return json({ status: "ok" }, { status: 200 });
   }
@@ -69,7 +81,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 export default function ProjectsIdRoute() {
   const { project, summary, tasks, proposals } = useLoaderData<typeof loader>();
 
-
+  const createdAtString = new Date(project.createdAt).toLocaleDateString();
 
 
 
@@ -85,7 +97,7 @@ export default function ProjectsIdRoute() {
         />
         <ProjectDetails
           notes={project.notes}
-          createdAt="11/12/2020"
+          createdAt={createdAtString}
           editDialogue={
             <ProjectEditDialogue
               title={project.title}
@@ -94,6 +106,9 @@ export default function ProjectsIdRoute() {
             />
           }
         >
+          <div>
+            <AddTaskDialog />
+          </div>
           <div className="p-2 bg-popover border-1 rounded-sm md:hidden">
             <ProjectTaskList
               columns={projectTaskColumnsShort}
@@ -107,6 +122,13 @@ export default function ProjectsIdRoute() {
             />
           </div>
         </ProjectDetails>
+        <div className="px-0  md:px-6 lg:px-20">
+          <ProjectProposalCard
+            proposalReview={proposals[0]}
+
+          />
+        </div>
+
       </main>
     </>
   )

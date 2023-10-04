@@ -18,7 +18,7 @@ export function TaskCheckBox({
   const handleCheckedChange = (toggleTo: boolean) => {
     submit({
       taskId,
-      toggleTo,
+      completed: toggleTo ? "true" : "false",
       _action: "toogleTask",
     }, { method: "POST" })
 
@@ -29,7 +29,7 @@ export function TaskCheckBox({
       <Checkbox
         id={taskId}
         name="completed"
-        defaultChecked={checked}
+        checked={checked}
         disabled={isFetching}
         onCheckedChange={(checked) => {
           if (checked === "indeterminate") return;

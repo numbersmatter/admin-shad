@@ -21,7 +21,7 @@ import {
   setTask,
   updateTask,
 } from "../database/tasks.server";
-import { FieldValue } from "firebase-admin/firestore";
+import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { getProducts } from "../database/product.server";
 import { readTaskList } from "../database/tasklist.server";
 import { Item, ProjectSummary } from "./domain-types";
@@ -29,7 +29,11 @@ import { getProposalData } from "./proposals-domain.server";
 import { readProposal } from "../database/proposals.server";
 import { ProjectTableRow } from "~/components/projects/comp/project-columns";
 import { makeDomainFunction } from "domain-functions";
-import { EditProjectSchema } from "./project-schemas";
+import {
+  EditProjectSchema,
+  NewTaskSchema,
+  ToggleTaskSchema,
+} from "./project-schemas";
 
 const createArrayValidProjectTasks = (project: Project) => {
   const projectTasks = project.taskIdList
@@ -135,11 +139,14 @@ export const getProjectData = async ({
     throw new Response("Project not found", { status: 404 });
   }
 
+  const createdAt = project.createdAt as Timestamp;
+
   const projectBasic = {
     id: project.id,
     title: project.title,
     status: project.status,
     notes: project.notes,
+    createdAt: createdAt.toDate().toJSON(),
   };
 
   const summary: ProjectSummary = {
@@ -281,6 +288,8 @@ const addProjectTask = async ({
   });
 };
 
+interface TaskFields extends Omit<TaskBase, "projectTitle"> {}
+
 export const addTaskToProject = async ({
   storeId,
   projectId,
@@ -288,7 +297,7 @@ export const addTaskToProject = async ({
 }: {
   storeId: string;
   projectId: string;
-  taskData: TaskBase;
+  taskData: TaskFields;
 }) => {
   const project = await readProject({
     storeId,
@@ -299,9 +308,11 @@ export const addTaskToProject = async ({
     throw new Response("Project not found", { status: 404 });
   }
 
+  const projectTitle = project.title;
+
   const newTaskId = await createTask({
     storeId,
-    taskData,
+    taskData: { ...taskData, projectTitle },
   });
 
   const projectTask: ProjectTask = {
@@ -317,7 +328,9 @@ export const addTaskToProject = async ({
     taskData: projectTask,
   });
 
-  return { newTaskId };
+  const taskTitle = taskData.title;
+
+  return { newTaskId, success: true, taskTitle };
 };
 
 const updateTaskComplete = async ({
@@ -379,7 +392,7 @@ export const toggleTaskComplete = async ({
     project: updateData,
   });
 
-  return { taskId };
+  return { taskId, success: true };
 };
 
 export const getProductsForAddingTasklist = async ({
@@ -532,19 +545,54 @@ export const updateProjectStatus = async ({
 };
 
 // mutations
-export const updateProjectMutation = (data2: {
+export const updateProjectMutation = (idObj: {
   storeId: string;
   projectId: string;
 }) => {
   return makeDomainFunction(EditProjectSchema)(async (data) => {
     return await updateProjectBasic({
-      storeId: data2.storeId,
-      projectId: data2.projectId,
+      storeId: idObj.storeId,
+      projectId: idObj.projectId,
       projectData: {
         title: data.title,
         notes: data.notes,
         invoiceAmount: data.invoiceAmount,
       },
+    });
+  });
+};
+
+export const addTaskToProjectMutation = (idObj: {
+  storeId: string;
+  projectId: string;
+  uuid: string;
+}) => {
+  return makeDomainFunction(NewTaskSchema)(async (data) => {
+    return await addTaskToProject({
+      storeId: idObj.storeId,
+      projectId: idObj.projectId,
+      taskData: {
+        projectId: idObj.projectId,
+        title: data.title,
+        notes: data.notes,
+        taskPoints: Number(data.taskPoints),
+        completed: false,
+        uuid: idObj.uuid,
+      },
+    });
+  });
+};
+
+export const toggleTaskMutation = (idObj: {
+  storeId: string;
+  projectId: string;
+}) => {
+  return makeDomainFunction(ToggleTaskSchema)(async (data) => {
+    return await toggleTaskComplete({
+      storeId: idObj.storeId,
+      taskId: data.taskId,
+      completed: data.completed === "true" ? true : false,
+      projectId: idObj.projectId,
     });
   });
 };

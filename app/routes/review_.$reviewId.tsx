@@ -1,19 +1,16 @@
-import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useFetcher, useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import { Fragment, useState } from "react";
 import { DisplayResponse } from "~/components/review/comp/display-response";
 import { ProductTags } from "~/components/review/comp/product-tags";
 import { ReviewList } from "~/components/review/comp/review-list";
+import { ReviewProposalCard } from "~/components/review/comp/review-proposal-card";
 import ReviewStatusDropDown from "~/components/review/comp/review-status-dropdown";
 import { StandardShell } from "~/components/shell/shell";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import { cn } from "~/lib/utils";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { getProposals, getReviewIdPageData } from "~/server/domains/proposals-domain.server";
+import { getReviewIdPageData } from "~/server/domains/proposals-domain.server";
 
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -72,49 +69,8 @@ export default function ReviewIdRoute() {
       </nav>
       <main className=" flex-1 bg-muted overflow-y-auto ">
         <div className="container mx-auto px-0 xl:px-8 xl:py-4">
-          <Card className="rounded-none border-2 border-b-muted-foreground xl:rounded-lg xl:border-muted-foreground">
-            <div className="flex justify-between items-center px-4 py-2 border-b border-muted-foreground md:hidden">
-              <Button
-                variant="secondary"
-                onClick={() => navigate("/review")}
-              >
-                Back
-              </Button>
-            </div>
-            <CardHeader>
-              <CardTitle>Standard Commission</CardTitle>
-              <CardDescription>
-                {proposalReview.humanId}
-              </CardDescription>
-              <div className="flex justify-start items-center gap-2">
-                <p className="text-lg font-medium">Current Status:</p>
-                <ReviewStatusDropDown reviewStatus={proposalReview.reviewStatus} />
-              </div>
-            </CardHeader>
-            <CardContent className="px-0 md:px-2">
-              <ProductTags size="large" tags={proposalReview.tags} />
-              <div className="mt-2 border-t border-muted-foreground">
-                <dl className="divide-y divide-muted-foreground">
-                  {
-                    userResponses.map((response, index) => (
-                      <DisplayResponse
-                        key={index}
-                        response={response}
-                      />
-                    ))
-                  }
-                </dl>
-              </div>
-            </CardContent>
-            <CardFooter>
-              {/* <StatusListBox
-                reviewStatus="review"
-                proposalId={reviewListCards[0].id}
-              /> */}
+          <ReviewProposalCard navigate={navigate} proposalReview={proposalReview} />
 
-            </CardFooter>
-
-          </Card>
         </div>
         <div className=" bg-muted h-[30px]">
 

@@ -65,10 +65,7 @@ export function ProjectEditDialogue({
         </DialogHeader>
         {/* @ts-ignore */}
         <fetcher.Form onSubmit={handleSaveChanges} method="POST">
-          <div className="">
-            saving
 
-          </div>
           <fieldset disabled={isSaving}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-4 ">
