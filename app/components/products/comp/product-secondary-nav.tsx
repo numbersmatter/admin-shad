@@ -1,5 +1,5 @@
 import { Arrow, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@radix-ui/react-dropdown-menu";
-import { NavLink } from "@remix-run/react";
+import { NavLink, useNavigate } from "@remix-run/react";
 import { ArrowUpIcon, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "~/components/ui/button"
 import {
@@ -66,6 +66,7 @@ export function ProductSecondaryNav({
   productId: string;
   defaultTab: string;
 }) {
+  const navigate = useNavigate();
 
   const productPath = `/products/${productId}`;
 
@@ -82,7 +83,7 @@ export function ProductSecondaryNav({
   const menuText = tabs.find((item) => item.id === defaultTab)?.name ?? "Navigate To:";
 
   const handleTabChange = (value: string) => {
-    return
+    return navigate(value)
   };
 
   return (
@@ -107,9 +108,9 @@ export function ProductSecondaryNav({
               onValueChange={handleTabChange}
             >
               {
-                tabs.map((item) => {
+                navTabs.map((item) => {
                   return (
-                    <DropdownMenuRadioItem className="py-2 font-medium text-center leading-6" key={item.id} value={item.id}>
+                    <DropdownMenuRadioItem className="py-2 font-medium text-center leading-6" key={item.id} value={item.to}>
                       {item.name}
                     </DropdownMenuRadioItem>
                   )

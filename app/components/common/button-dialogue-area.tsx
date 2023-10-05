@@ -72,7 +72,7 @@ export function ButtonDialogArea({
                 defaultValue={inputDefaultValue}
                 className="col-span-3"
               />
-              <input hidden name="_action" value={_action} />
+              <input readOnly hidden name="_action" value={_action} />
             </div>
 
           </div>

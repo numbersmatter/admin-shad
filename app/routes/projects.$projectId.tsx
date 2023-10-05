@@ -1,22 +1,47 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
-import { projectsColumnsLong, projectsColumnsShort, projectsTestData } from "~/components/projects/comp/project-columns";
-import { ProjectDataTable } from "~/components/projects/comp/project-data-table";
+import {
+  useLoaderData,
+  isRouteErrorResponse,
+  useRouteError,
+} from "@remix-run/react";
 import { ProjectHeader } from "~/components/projects/comp/project-header";
 import ProjectStatusSelect from "~/components/projects/comp/project-status-select";
-import { useToast } from "~/components/ui/use-toast";
 import { ProjectDetails } from "~/components/projects/comp/project-details";
 import { ProjectEditDialogue } from "~/components/projects/comp/project-edit-dialogue";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { addTaskToProjectMutation, getProjectData, getProjectItemsByStatus, toggleTaskMutation, updateProjectMutation } from "~/server/domains/projectsDomain.server";
-import { ProjectStatuses, projectStatuses } from "~/server/database/projects.server";
 import { ProjectTaskList } from "~/components/projects/comp/project-task-list";
 import { projectTaskColumnsLong, projectTaskColumnsShort } from "~/components/projects/comp/task-columns";
 import { formAction } from "~/server/form-actions/form-action.server";
 import { EditProjectSchema, NewTaskSchema, ToggleTaskSchema } from "~/server/domains/project-schemas";
 import { AddTaskDialog } from "~/components/projects/comp/add-task-dialog";
 import { ProjectProposalCard } from "~/components/projects/comp/project-proposal-card";
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>
+          {error.status} {error.statusText}
+        </h1>
+        <p>{error.data}</p>
+      </div>
+    );
+  } else if (error instanceof Error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <p>{error.message}</p>
+        <p>The stack trace is:</p>
+        <pre>{error.stack}</pre>
+      </div>
+    );
+  } else {
+    return <h1>Unknown Error</h1>;
+  }
+}
 
 
 
@@ -85,7 +110,6 @@ export default function ProjectsIdRoute() {
 
 
 
-
   return (
     <>
       <main className="flex h-full flex-1 flex-col space-y-8 overflow-y-auto">
@@ -123,10 +147,13 @@ export default function ProjectsIdRoute() {
           </div>
         </ProjectDetails>
         <div className="px-0  md:px-6 lg:px-20">
-          <ProjectProposalCard
-            proposalReview={proposals[0]}
+          {
+            proposals.length > 0 &&
+            <ProjectProposalCard
+              proposalReview={proposals[0]}
+            />
 
-          />
+          }
         </div>
 
       </main>

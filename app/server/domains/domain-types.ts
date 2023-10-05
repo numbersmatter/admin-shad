@@ -28,7 +28,7 @@ export interface ProductWorkItem {
   id: string;
   name: string;
   description: string;
-  status: string;
+  availability: string;
 }
 
 export interface ProductData {

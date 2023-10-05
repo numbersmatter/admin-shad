@@ -6,6 +6,8 @@ import { StandardDataTable } from "~/components/common/standard-data-table";
 import { productColumnsLong, productColumnsShort, productRowTestData } from "~/components/products/product-columns";
 
 import { StandardShell } from "~/components/shell/shell";
+import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
+import { getProductsPageData } from "~/server/domains/productDomain.server";
 
 export async function action({ params, request }: ActionFunctionArgs) {
   //  const {storeId, uid, session} = await intializeWorkSession(request);  
@@ -14,16 +16,18 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  //  const {storeId, uid, session} = await intializeWorkSession(request);  
+  const { storeId, uid, session } = await intializeWorkSession(request);
+
+  const { productPageData } = await getProductsPageData({ storeId });
 
 
-  return json({});
+  return json({ productPageData });
 }
 
 
 
 export default function ProjectsRoute() {
-  const { } = useLoaderData<typeof loader>();
+  const { productPageData } = useLoaderData<typeof loader>();
 
 
   const pageTitle = "Products and Services";
@@ -48,7 +52,7 @@ export default function ProjectsRoute() {
           <div className="border-0  border-accent-foreground  lg:border-2 lg:rounded-md lg:p-4 ">
             <StandardDataTable
               columns={productColumnsLong}
-              data={productRowTestData}
+              data={productPageData.products}
             />
           </div>
         </div>
@@ -56,7 +60,7 @@ export default function ProjectsRoute() {
           <div className="">
             <StandardDataTable
               columns={productColumnsShort}
-              data={productRowTestData}
+              data={productPageData.products}
             />
           </div>
         </div>

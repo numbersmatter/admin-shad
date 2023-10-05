@@ -176,7 +176,7 @@ export const getProductsPageData = async ({ storeId }: { storeId: string }) => {
         id: product.id,
         name: product.basic.name,
         description: product.basic.description,
-        status: product.availability,
+        availability: product.availability,
         ordering: product.basic.ordering ?? 0,
       };
     })
@@ -393,6 +393,28 @@ export const updateProductBasic = async ({
 }) => {
   const updateData = {
     basic: productBasic,
+  };
+
+  await updateProduct({
+    storeId,
+    productId,
+    updateData,
+  });
+};
+
+export const updateProductBasicField = async ({
+  productId,
+  storeId,
+  fieldId,
+  fieldValue,
+}: {
+  productId: string;
+  storeId: string;
+  fieldId: string;
+  fieldValue: string | number;
+}) => {
+  const updateData = {
+    [`basic.${fieldId}`]: fieldValue,
   };
 
   await updateProduct({

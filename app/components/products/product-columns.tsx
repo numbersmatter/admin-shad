@@ -7,7 +7,7 @@ import { ProductActionsMenu } from "./comp/product-action-menu";
 type ProductRow = {
   id: string;
   name: string;
-  availability: boolean;
+  availability: string;
   description: string;
 }
 
@@ -17,19 +17,19 @@ export const productRowTestData: ProductRow[] = [
   {
     id: "1",
     name: "Product 1",
-    availability: true,
+    availability: "open",
     description: "This is a description of product 1",
   },
   {
     id: "2",
     name: "Standard Commission in my ususal style but reallylong this time in order to test the wrapping",
-    availability: false,
+    availability: "open",
     description: "This is a description of product 2",
   },
   {
     id: "3",
     name: "Comic",
-    availability: true,
+    availability: "open",
     description: "This is a description of product 3",
   },
 ];
@@ -69,7 +69,7 @@ export const productColumnsShort: ColumnDef<ProductRow>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          {row.original.availability ? <AvailabilityTrue /> : <AvailabilityFalse />}
+          {row.original.availability === "open" ? <AvailabilityTrue /> : <AvailabilityFalse />}
         </div>
       )
     },
@@ -118,7 +118,7 @@ export const productColumnsLong: ColumnDef<ProductRow>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          {row.original.availability ? <AvailabilityTrue /> : <AvailabilityFalse />}
+          {row.original.availability === "open" ? <AvailabilityTrue /> : <AvailabilityFalse />}
         </div>
       )
     },

@@ -1,5 +1,8 @@
+
+
+
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { Outlet, isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
+import { isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
 import { ProductBasicCard } from "~/components/products/comp/product-basic-card";
 import ProductDescriptionList from "~/components/products/comp/product-description-list";
 import { ProductSecondaryNav } from "~/components/products/comp/product-secondary-nav";
@@ -51,41 +54,21 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const { productBasic } = await getProductEditData({ storeId, productId: params.productId ?? "none" });
 
-
-
-
   return json({ productBasic });
 }
 
 
 
-export default function ProductIdRoute() {
+export default function ProductIdIndexRoute() {
   const { productId } = useParams();
   const { productBasic } = useLoaderData<typeof loader>();
 
 
   return (
-    <div className="container overflow-y-auto ">
-      <header className="w-full p-4">
-        <h1 className="text-4xl font-bold">
-          {productBasic.name}
-        </h1>
-        <p className="text-muted-foreground">
-          {productBasic.description}
-        </p>
-        <div className="">
-          <ProductSecondaryNav
-            productId={productId ?? "/"}
-            defaultTab={"index"}
-          />
-        </div>
-
-      </header>
-      <Outlet />
-
-
-    </div>
+    <main className="">
+      <ProductDescriptionList
+        productBasic={productBasic}
+      />
+    </main>
   )
-
-
 }
