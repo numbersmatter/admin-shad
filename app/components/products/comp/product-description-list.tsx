@@ -36,7 +36,7 @@ export default function ProductDescriptionList({
                   inputId={"name"}
                   inputDefaultValue={name}
                   saveLabel={"Save Changes"}
-                  _action={"updateName"}
+                  _action={"updateBasic"}
                 />
               </span>
             </dd>
@@ -55,7 +55,7 @@ export default function ProductDescriptionList({
                   inputId={"priceRange"}
                   inputDefaultValue={priceRange}
                   saveLabel={"Save Changes"}
-                  _action={"updatePriceRange"}
+                  _action={"updateBasic"}
                 />
               </span>
             </dd>
@@ -75,7 +75,7 @@ export default function ProductDescriptionList({
                   inputId={"description"}
                   inputDefaultValue={description}
                   saveLabel={"Save Changes"}
-                  _action={"updateDescription"}
+                  _action={"updateBasic"}
                 />
               </span>
             </dd>
@@ -95,7 +95,7 @@ export default function ProductDescriptionList({
                   inputId={"pricing"}
                   inputDefaultValue={pricing}
                   saveLabel={"Save Changes"}
-                  _action={"updatePricing"}
+                  _action={"updateBasic"}
                 />
               </span>
             </dd>

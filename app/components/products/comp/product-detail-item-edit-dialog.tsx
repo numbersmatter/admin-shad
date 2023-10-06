@@ -10,27 +10,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog"
-import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
-import { toast } from "../ui/use-toast"
+import { Textarea } from "~/components/ui/textarea"
+import { toast } from "~/components/ui/use-toast"
 
-export function ButtonDialogField({
-  buttonLabel,
-  dialogTitle,
-  dialogDescription,
-  inputLabel,
-  inputId,
+export function ProductDetailItemEditDialog({
   inputDefaultValue,
-  saveLabel,
   _action,
+  itemId,
 }: {
-  buttonLabel: string,
-  dialogTitle: string,
-  dialogDescription: string,
-  inputLabel: string,
-  inputId: string,
+  itemId: string,
   inputDefaultValue: string,
-  saveLabel: string,
   _action: string,
 }) {
   const fetcher = useFetcher<any>();
@@ -43,13 +33,11 @@ export function ButtonDialogField({
   const actionData = fetcher.data;
   const success = actionData ? actionData.success : false;
 
-
   const handleSaveChanges = (e: FormEvent) => {
     // @ts-ignore
     const formData = new FormData(e.currentTarget);
     if (!formRef.current) return;
     fetcher.submit(formData, { method: "POST" })
-
   }
 
   useEffect(() => {
@@ -57,39 +45,34 @@ export function ButtonDialogField({
       toast({ title: "Updated Saved", description: "" });
       setOpen(false);
     }
-
   }, [isSaving, success])
-
-
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary">{buttonLabel}</Button>
+        <Button variant="secondary">Edit</Button>
       </DialogTrigger>
-      <DialogContent className="rounded-none sm:rounded-md sm:max-w-[525px] ">
+      <DialogContent className="rounded-none sm:rounded-md sm:max-w-[525px]">
         <fetcher.Form method="POST" ref={formRef} onSubmit={handleSaveChanges}>
           <DialogHeader>
-            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogTitle>Edit Item</DialogTitle>
             <DialogDescription>
-              {dialogDescription}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid-cols-1 space-y-2 md:grid-cols-4 md:gap-4  items-center ">
               <Label htmlFor="name" className="text-right">
-                {inputLabel}
+                Detail Item
               </Label>
-              <Input
-                id={inputId}
-                name={inputId}
+              <Textarea
+                id={"value"}
+                name={"value"}
                 defaultValue={inputDefaultValue}
                 className="col-span-3"
               />
               <input readOnly hidden name="_action" value={_action} />
+              <input readOnly hidden name="itemId" value={itemId} />
             </div>
-
           </div>
           <DialogFooter>
             <Button type="submit">Save changes</Button>
@@ -97,6 +80,5 @@ export function ButtonDialogField({
         </fetcher.Form>
       </DialogContent>
     </Dialog>
-
   )
 }

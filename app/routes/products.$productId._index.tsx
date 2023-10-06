@@ -8,7 +8,9 @@ import ProductDescriptionList from "~/components/products/comp/product-descripti
 import { ProductSecondaryNav } from "~/components/products/comp/product-secondary-nav";
 import { ProductTabs } from "~/components/products/comp/product-tabs";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { getProductEditData } from "~/server/domains/productDomain.server";
+import { ProductBasicsSchema } from "~/server/domains/product-schemas";
+import { getProductEditData, updateProductBasicFieldMutation } from "~/server/domains/productDomain.server";
+import { formAction } from "~/server/form-actions/form-action.server";
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -36,13 +38,21 @@ export function ErrorBoundary() {
   }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
+  const { storeId, uid, session } = await intializeWorkSession(request);
   const formData = await request.clone().formData();
+
+  const productId = params.productId ?? "none";
   const action = formData.get("_action");
 
   switch (action) {
-    case "updateName":
-      return json({ status: "ok", message: "Name Updated" }, { status: 200 });
+    case "updateBasic":
+      return formAction({
+        request,
+        mutation: updateProductBasicFieldMutation({ storeId, productId }),
+        schema: ProductBasicsSchema.partial(),
+      })
+
     default:
       return json({ status: "ok" }, { status: 200 });
   }

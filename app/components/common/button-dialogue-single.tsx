@@ -1,5 +1,5 @@
 import { useFetcher } from "@remix-run/react"
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useRef, useState } from "react"
 import { Button } from "~/components/ui/button"
 import {
   Dialog,
@@ -12,9 +12,9 @@ import {
 } from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
-import { toast } from "../ui/use-toast"
+import { Textarea } from "../ui/textarea"
 
-export function ButtonDialogField({
+export function ButtonDialogSingle({
   buttonLabel,
   dialogTitle,
   dialogDescription,
@@ -23,6 +23,7 @@ export function ButtonDialogField({
   inputDefaultValue,
   saveLabel,
   _action,
+  textarea,
 }: {
   buttonLabel: string,
   dialogTitle: string,
@@ -32,17 +33,11 @@ export function ButtonDialogField({
   inputDefaultValue: string,
   saveLabel: string,
   _action: string,
+  textarea?: boolean,
 }) {
-  const fetcher = useFetcher<any>();
+  const fetcher = useFetcher();
   const formRef = useRef<HTMLFormElement>(null);
   const [open, setOpen] = useState(false);
-  const formData = fetcher.formData;
-  const isFormData = formData !== undefined;
-
-  const isSaving = fetcher.state !== "idle" && isFormData
-  const actionData = fetcher.data;
-  const success = actionData ? actionData.success : false;
-
 
   const handleSaveChanges = (e: FormEvent) => {
     // @ts-ignore
@@ -52,14 +47,6 @@ export function ButtonDialogField({
 
   }
 
-  useEffect(() => {
-    if (success && !isSaving) {
-      toast({ title: "Updated Saved", description: "" });
-      setOpen(false);
-    }
-
-  }, [isSaving, success])
-
 
 
 
@@ -68,7 +55,7 @@ export function ButtonDialogField({
       <DialogTrigger asChild>
         <Button variant="secondary">{buttonLabel}</Button>
       </DialogTrigger>
-      <DialogContent className="rounded-none sm:rounded-md sm:max-w-[525px] ">
+      <DialogContent className="rounded-none sm:rounded-md sm:max-w-[525px]">
         <fetcher.Form method="POST" ref={formRef} onSubmit={handleSaveChanges}>
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
@@ -81,13 +68,24 @@ export function ButtonDialogField({
               <Label htmlFor="name" className="text-right">
                 {inputLabel}
               </Label>
-              <Input
-                id={inputId}
-                name={inputId}
-                defaultValue={inputDefaultValue}
-                className="col-span-3"
-              />
+              {
+                textarea ?
+                  <Textarea
+                    id={inputId}
+                    name={inputId}
+                    defaultValue={inputDefaultValue}
+                    className="col-span-3"
+                  />
+                  :
+                  <Input
+                    id={inputId}
+                    name="value"
+                    defaultValue={inputDefaultValue}
+                    className="col-span-3"
+                  />
+              }
               <input readOnly hidden name="_action" value={_action} />
+              <input readOnly hidden name="inputId" value={inputId} />
             </div>
 
           </div>

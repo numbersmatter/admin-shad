@@ -11,3 +11,21 @@ export const ProductBasicsSchema = z.object({
     })
     .nonnegative(),
 });
+
+export const EditDetailBasicSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Detail Name must be at least 3 characters long.")
+    .max(100),
+  type: z.enum(["bullet", "paragraph"]).default("bullet"),
+  _action: z.string().default("updateBasic"),
+  id: z.string(),
+});
+
+export const AddDetailSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Detail Name must be at least 3 characters long.")
+    .max(100),
+  type: z.enum(["bullet", "paragraph"]).default("bullet"),
+});

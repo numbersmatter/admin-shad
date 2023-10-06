@@ -32,6 +32,7 @@ import {
   ProductWorkItem,
 } from "./domain-types";
 import { ProductBasicsSchema } from "./product-schemas";
+import id from "date-fns/esm/locale/id/index.js";
 // import type { ImageUploadFormData } from "~/ui/work/Pages/ProductImagesEditPage";
 // import type { FieldSettingsData } from "~/ui/work/PageComponents/FormFieldSettings";
 // import type { ProductStoreItem } from "~/ui/work/PageComponents/StoreControl";
@@ -1306,3 +1307,41 @@ export const addTaskList = async ({
 
   return taskListId;
 };
+
+//
+// Product Mutations
+//
+export const updateProductBasicFieldMutation = (idData: {
+  storeId: string;
+  productId: string;
+}) =>
+  makeDomainFunction(ProductBasicsSchema.partial())(async (values) => {
+    const product = await readProduct({
+      storeId: idData.storeId,
+      productId: idData.productId,
+    });
+
+    if (!product) {
+      throw new Response("Product not found", { status: 404 });
+    }
+
+    const ordering = product.basic.ordering ?? 0;
+
+    const basic: ProductBasic = {
+      ordering: values.ordering ?? ordering,
+      name: values.name ?? product.basic.name,
+      description: values.description ?? product.basic.description,
+      priceRange: values.priceRange ?? product.basic.priceRange,
+      pricing: values.pricing ?? product.basic.pricing,
+    };
+
+    console.log("basic", basic);
+
+    await updateProductBasic({
+      storeId: idData.storeId,
+      productId: idData.productId,
+      productBasic: basic,
+    });
+
+    return { message: "Success", success: true };
+  });
