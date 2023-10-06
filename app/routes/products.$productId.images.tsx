@@ -1,11 +1,10 @@
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
-import { isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
-import ProductDescriptionList from "~/components/products/comp/product-description-list";
+import { isRouteErrorResponse, useLoaderData, useRouteError } from "@remix-run/react";
 import { ProductImageGallery } from "~/components/products/comp/product-image-gallery";
 import { ImageUploadForm } from "~/components/products/comp/product-image-upload-form";
 import { ListProductImages } from "~/components/products/comp/product-list-images";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { getProductEditData } from "~/server/domains/productDomain.server";
+import { deleteProductImage, getProductEditData } from "~/server/domains/productDomain.server";
 
 export function ErrorBoundary() {
   const error = useRouteError();
@@ -33,13 +32,22 @@ export function ErrorBoundary() {
   }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
+  const { storeId, uid, session } = await intializeWorkSession(request);
   const formData = await request.clone().formData();
   const action = formData.get("_action");
 
   switch (action) {
-    case "updateName":
-      return json({ status: "ok", message: "Name Updated" }, { status: 200 });
+
+    case "deleteImage": {
+      await deleteProductImage({
+        imageId: formData.get("imageId") as string,
+        storeId,
+        productId: params.productId ?? "none"
+      })
+      return json({ status: "ok", message: "Image Deleted" }, { status: 200 });
+    }
+
     default:
       return json({ status: "ok" }, { status: 200 });
   }
