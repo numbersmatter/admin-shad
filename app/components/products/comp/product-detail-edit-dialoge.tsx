@@ -13,14 +13,24 @@ import {
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "~/components/ui/select"
-import { Textarea } from "~/components/ui/textarea"
 import { useToast } from "~/components/ui/use-toast"
 
 export function ProductDetailEditDialog({
-  name, detailType
+  name,
+  detailType,
+  buttonLabel,
+  title,
+  description,
+  submitLabel,
+  _action,
 }: {
   name: string,
+  buttonLabel: string,
+  title: string,
+  description: string,
   detailType: "bullet" | "paragraph",
+  submitLabel?: string,
+  _action: string,
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -52,12 +62,13 @@ export function ProductDetailEditDialog({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline">Edit Detail</Button>
+        <Button type="button" variant="outline">{buttonLabel}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[750px]">
         <DialogHeader>
-          <DialogTitle>Edit Detail</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
+            {description}
           </DialogDescription>
         </DialogHeader>
         {/* @ts-ignore */}
@@ -75,7 +86,7 @@ export function ProductDetailEditDialog({
                   defaultValue={name}
                   className="col-span-1 sm:col-span-3"
                 />
-                <input hidden name="_action" value="updateBasic" readOnly />
+                <input hidden name="_action" value={_action} readOnly />
               </div>
               <div className="grid grid-cols-1 items-center gap-4 sm:grid-cols-4 ">
                 <Label htmlFor="" className="sm:text-right">
@@ -93,9 +104,10 @@ export function ProductDetailEditDialog({
                     </SelectGroup>
                   </SelectContent>
                 </Select>
+
               </div>
             </div>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">{submitLabel ? submitLabel : "Save"}</Button>
           </fieldset>
         </fetcher.Form>
         <DialogFooter>

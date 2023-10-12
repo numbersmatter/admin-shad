@@ -2,6 +2,7 @@ import { ActionFunctionArgs, LoaderFunctionArgs, json, redirect } from "@remix-r
 import { useLoaderData } from "@remix-run/react";
 import { makeDomainFunction } from "domain-functions";
 import { z } from "zod";
+import { ButtonDialogSingle } from "~/components/common/button-dialogue-single";
 import { ProductDetailCard } from "~/components/products/comp/product-detail-card";
 import { ProductDetailEditDialog } from "~/components/products/comp/product-detail-edit-dialoge";
 import { ProductDetailItemCard } from "~/components/products/comp/product-detail-item-card";
@@ -29,7 +30,6 @@ export async function action({ params, request }: ActionFunctionArgs) {
   const formData = await request.clone().formData();
 
   const action = formData.get("_action");
-
 
   const addDetailItem = makeDomainFunction(AddItemSchema)(async (values) => {
     await addProductDetailItem({
@@ -146,8 +146,12 @@ export default function ProductDetailId() {
       <ProductDetailCard detail={detail} >
         <div className="flex flex-col justify-start  content-center">
           <ProductDetailEditDialog
+            buttonLabel="Edit Detail"
+            title="Edit Detail"
+            description="Edit this detail"
             name={detail.name}
             detailType={detail.type}
+            _action="updateBasic"
           />
         </div>
         <div className="flex flex-col justify-start py-2  content-center gap-4">
@@ -159,6 +163,7 @@ export default function ProductDetailId() {
             })
           }
         </div>
+
       </ProductDetailCard>
     </div>
   );

@@ -75,7 +75,17 @@ export function ProductDetailItemEditDialog({
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit">Save changes</Button>
+            <div className="flex justify-between">
+              <div>
+
+
+              </div>
+
+              <div>
+
+                <Button type="submit">Save changes</Button>
+              </div>
+            </div>
           </DialogFooter>
         </fetcher.Form>
       </DialogContent>
