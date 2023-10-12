@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, } from "~/components/ui/card";
 import { ProductDetailItemEditDialog } from "./product-detail-item-edit-dialog";
 import { Button } from "~/components/ui/button";
 

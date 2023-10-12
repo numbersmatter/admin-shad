@@ -39,7 +39,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       itemValue: values.value,
     });
 
-    return { message: "added" };
+    return { message: "added", success: true };
   });
 
   const updateDetail = makeDomainFunction(AddDetailSchema)(async (values) => {

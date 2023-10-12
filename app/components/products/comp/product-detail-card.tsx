@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import { ProductDetailAddItemDialog } from "./product-add-detail-item";
 
 
 
@@ -22,6 +23,9 @@ export function ProductDetailCard({
         {children}
 
       </CardContent>
+      <CardFooter className="flex justify-between">
+        <ProductDetailAddItemDialog _action={"addItem"} />
+      </CardFooter>
     </Card>
   )
 
