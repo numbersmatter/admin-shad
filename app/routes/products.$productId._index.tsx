@@ -3,10 +3,7 @@
 
 import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { isRouteErrorResponse, useLoaderData, useParams, useRouteError } from "@remix-run/react";
-import { ProductBasicCard } from "~/components/products/comp/product-basic-card";
 import ProductDescriptionList from "~/components/products/comp/product-description-list";
-import { ProductSecondaryNav } from "~/components/products/comp/product-secondary-nav";
-import { ProductTabs } from "~/components/products/comp/product-tabs";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { ProductBasicsSchema } from "~/server/domains/product-schemas";
 import { getProductEditData, updateProductBasicFieldMutation } from "~/server/domains/productDomain.server";

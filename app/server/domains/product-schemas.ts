@@ -12,6 +12,12 @@ export const ProductBasicsSchema = z.object({
     .nonnegative(),
 });
 
+export const MoveOptionSchema = z.object({
+  _action: z.string().default("moveOption"),
+  optionId: z.string(),
+  direction: z.enum(["up", "down"]),
+});
+
 export const EditDetailBasicSchema = z.object({
   name: z
     .string()
@@ -28,4 +34,11 @@ export const AddDetailSchema = z.object({
     .min(3, "Detail Name must be at least 3 characters long.")
     .max(100),
   type: z.enum(["bullet", "paragraph"]).default("bullet"),
+});
+
+export const AddOptionSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Option Name must be at least 3 characters long.")
+    .max(100),
 });

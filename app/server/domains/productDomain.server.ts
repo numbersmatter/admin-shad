@@ -31,7 +31,11 @@ import {
   ProductStoreItem,
   ProductWorkItem,
 } from "./domain-types";
-import { ProductBasicsSchema } from "./product-schemas";
+import {
+  AddOptionSchema,
+  MoveOptionSchema,
+  ProductBasicsSchema,
+} from "./product-schemas";
 import id from "date-fns/esm/locale/id/index.js";
 // import type { ImageUploadFormData } from "~/ui/work/Pages/ProductImagesEditPage";
 // import type { FieldSettingsData } from "~/ui/work/PageComponents/FormFieldSettings";
@@ -723,6 +727,47 @@ export const migrateProductDetails = async ({
 //
 //
 
+export const getProductOptions = async ({
+  storeId,
+  productId,
+}: {
+  storeId: string;
+  productId: string;
+}) => {
+  const product = await readProduct({ storeId, productId });
+  if (!product) {
+    throw new Response("Product not found", { status: 404 });
+  }
+
+  const optionData = product.productOptions.optionData;
+  const optionOrder = product.productOptions.optionOrder;
+
+  const validOptions = optionOrder
+    .filter((optionId) => {
+      return optionData.hasOwnProperty(optionId);
+    })
+    .map((optionId) => {
+      const option = optionData[optionId];
+
+      const choices = option.choiceOrder
+        .filter((choiceId) => {
+          return option.choiceData.hasOwnProperty(choiceId);
+        })
+        .map((choiceId) => {
+          const choice = option.choiceData[choiceId];
+          return choice;
+        });
+
+      return {
+        id: option.id,
+        name: option.name,
+        choices: choices,
+      };
+    });
+
+  return validOptions;
+};
+
 export const addProductOption = async ({
   productId,
   storeId,
@@ -1344,4 +1389,81 @@ export const updateProductBasicFieldMutation = (idData: {
     });
 
     return { message: "Success", success: true };
+  });
+
+export const moveProductOptionMutation = (idData: {
+  storeId: string;
+  productId: string;
+}) =>
+  makeDomainFunction(MoveOptionSchema)(async (values) => {
+    const product = await readProduct({
+      storeId: idData.storeId,
+      productId: idData.productId,
+    });
+
+    if (!product) {
+      throw new Response("Product not found", { status: 404 });
+    }
+
+    const optionId = values.optionId;
+    const optionOrder = product.productOptions.optionOrder;
+    const optionLength = optionOrder.length;
+
+    const optionIndex = optionOrder.findIndex((optionIdText) => {
+      return optionId === optionIdText;
+    });
+
+    if (optionIndex === -1) {
+      throw new Response("Option not found", { status: 404 });
+    }
+
+    const newOptionOrder = optionOrder.filter((optionIdText) => {
+      return optionId !== optionIdText;
+    });
+
+    if (values.direction === "up") {
+      const newIndex = optionIndex <= 0 ? 0 : optionIndex - 1;
+      newOptionOrder.splice(newIndex, 0, optionId);
+    } else {
+      const newIndex =
+        optionIndex >= optionLength - 1 ? optionLength - 1 : optionIndex + 1;
+      newOptionOrder.splice(newIndex, 0, optionId);
+    }
+
+    const updateData = {
+      "productOptions.optionOrder": newOptionOrder,
+    };
+
+    await updateProduct({
+      storeId: idData.storeId,
+      productId: idData.productId,
+      updateData,
+    });
+
+    return { message: "Success", success: true };
+  });
+
+export const addProductOptionMutation = (idData: {
+  storeId: string;
+  productId: string;
+}) =>
+  makeDomainFunction(AddOptionSchema)(async (values) => {
+    const product = await readProduct({
+      storeId: idData.storeId,
+      productId: idData.productId,
+    });
+
+    if (!product) {
+      throw new Response("Product not found", { status: 404 });
+    }
+
+    const optionId = await addProductOption({
+      storeId: idData.storeId,
+      productId: idData.productId,
+      optionData: {
+        name: values.name,
+      },
+    });
+
+    return optionId;
   });
