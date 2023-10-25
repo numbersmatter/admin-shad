@@ -1,17 +1,16 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { performMutation } from "remix-forms";
 import { ProductOptionDialog } from "~/components/products/comp/product-option-add-option";
-import { productOptionColumnsLong, productOptionColumnsShort, productOptionTestData } from "~/components/products/product-options-columns";
+import { productOptionColumnsLong } from "~/components/products/product-options-columns";
 import { ProjectDataTable } from "~/components/projects/comp/project-data-table";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { AddOptionSchema, MoveOptionSchema } from "~/server/domains/product-schemas";
 import { addProductOptionMutation, getProductOptions, moveProductOptionMutation } from "~/server/domains/productDomain.server";
-import { formAction } from "~/server/form-actions/form-action.server";
 
 export async function action({ params, request }: ActionFunctionArgs) {
-  const { storeId, uid, session } = await intializeWorkSession(request);
+  const { storeId, } = await intializeWorkSession(request);
   const formData = await request.clone().formData();
 
   const productId = params.productId ?? "none";
@@ -47,7 +46,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 }
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const { storeId, uid, session } = await intializeWorkSession(request);
+  const { storeId } = await intializeWorkSession(request);
 
   const validOptions = await getProductOptions({ storeId, productId: params.productId ?? "none" })
 
