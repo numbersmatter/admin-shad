@@ -759,7 +759,8 @@ export const getProductOptions = async ({
         });
 
       return {
-        id: option.id,
+        productId,
+        optionId: option.id,
         name: option.name,
         choices: choices,
       };

@@ -1,15 +1,18 @@
+import { useNavigate } from "@remix-run/react";
 import { MoreHorizontal } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "~/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 
 
-export function ProductActionsMenu({
+export function ProductOptionActionMenu({
   productId,
+  optionId,
 }: {
-  productId: string
+  productId: string;
+  optionId: string;
 }) {
-  const productLink = `/products/${productId}`
+  const productLink = `/products/${productId}/options/${optionId}`
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,14 +23,9 @@ export function ProductActionsMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(productId)}
-        >
-          Copy Product ID
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <Link to={productLink}>
-          <DropdownMenuItem>Go to Product</DropdownMenuItem>
+          <DropdownMenuItem>Go to Option</DropdownMenuItem>
         </Link>
       </DropdownMenuContent>
     </DropdownMenu>

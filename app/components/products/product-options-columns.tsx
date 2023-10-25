@@ -2,10 +2,12 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowBigDown, ArrowBigUp, CheckCircle, XCircleIcon } from "lucide-react";
 import { ProductActionsMenu } from "./comp/product-action-menu";
 import { useFetcher } from "@remix-run/react";
+import { ProductOptionActionMenu } from "./comp/product-option-action-menu";
 
 
 type ProductOptionRow = {
-  id: string;
+  productId: string;
+  optionId: string;
   name: string;
 }
 
@@ -13,12 +15,14 @@ type ProductOptionRow = {
 
 export const productOptionTestData: ProductOptionRow[] = [
   {
-    id: "1",
+    productId: "1",
+    optionId: "1",
     name: "Type of Background",
     // description: "Type of Background you would like",
   },
   {
-    id: "2",
+    productId: "2",
+    optionId: "2",
     name: "Number of Characters",
     // description: "Number of Characters",
   },
@@ -54,7 +58,7 @@ export const productOptionColumnsShort: ColumnDef<ProductOptionRow>[] = [
     id: "actions",
     cell: ({ row }) => {
       return (
-        <ProductActionsMenu productId={row.original.id} />
+        <ProductOptionActionMenu productId={row.original.productId} optionId={row.original.optionId} />
       )
     },
   },
@@ -104,7 +108,7 @@ export const productOptionColumnsLong: ColumnDef<ProductOptionRow>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <MoveComp direction="up" optionId={row.original.id} />
+          <MoveComp direction="up" optionId={row.original.optionId} />
         </div>
       )
     },
@@ -115,7 +119,7 @@ export const productOptionColumnsLong: ColumnDef<ProductOptionRow>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <MoveComp direction="down" optionId={row.original.id} />
+          <MoveComp direction="down" optionId={row.original.optionId} />
         </div>
       )
     },
@@ -124,7 +128,7 @@ export const productOptionColumnsLong: ColumnDef<ProductOptionRow>[] = [
     id: "actions",
     cell: ({ row }) => {
       return (
-        <ProductActionsMenu productId={row.original.id} />
+        <ProductOptionActionMenu productId={row.original.productId} optionId={row.original.optionId} />
       )
     },
   },
