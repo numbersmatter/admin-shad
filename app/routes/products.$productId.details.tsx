@@ -67,7 +67,7 @@ export default function ProductIdDetailsRoute() {
           <ProductDetailEditDialog
             buttonLabel="Add Detail"
             title="Add Detail"
-            description="Edit this detail"
+            description="Edit this detail."
             name={""}
             detailType={"bullet"}
             _action="updateBasic"

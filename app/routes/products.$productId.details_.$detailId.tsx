@@ -9,7 +9,7 @@ import { ProductDetailItemCard } from "~/components/products/comp/product-detail
 import { Button } from "~/components/ui/button";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { AddDetailSchema, EditDetailBasicSchema } from "~/server/domains/product-schemas";
-import { addProductDetailItem, deleteProductDetailItem, getProductEditData, updateProductDetail, updateProductDetailItem } from "~/server/domains/productDomain.server";
+import { addProductDetailItem, deleteProductDetail, deleteProductDetailItem, getProductEditData, updateProductDetail, updateProductDetailItem } from "~/server/domains/productDomain.server";
 import { formAction } from "~/server/form-actions/form-action.server";
 
 
@@ -20,6 +20,10 @@ const AddItemSchema = z.object({
 const updateItemSchema = z.object({
   value: z.string(),
   itemId: z.string(),
+  _action: z.string(),
+});
+
+const DeleteDetailSchema = z.object({
   _action: z.string(),
 });
 
@@ -77,6 +81,16 @@ export async function action({ params, request }: ActionFunctionArgs) {
 
     return { message: "saved", success: true };
   });
+  const deleteDetail = makeDomainFunction(DeleteDetailSchema)(async (values) => {
+    await deleteProductDetail({
+      productId,
+      storeId,
+      detailId,
+    });
+
+
+    return { message: "deleted" }
+  })
 
   if (action === "updateDetailItem") {
     return formAction({
@@ -109,6 +123,14 @@ export async function action({ params, request }: ActionFunctionArgs) {
       schema: EditDetailBasicSchema,
     });
   };
+  if (action === "deleteDetail") {
+    return formAction({
+      request,
+      mutation: deleteDetail,
+      schema: DeleteDetailSchema,
+      successPath: `/products/${productId}/details`
+    });
+  }
 
 
 
