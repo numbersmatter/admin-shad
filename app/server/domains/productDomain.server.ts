@@ -727,6 +727,45 @@ export const migrateProductDetails = async ({
 //
 //
 
+export const getProductOption = async ({
+  storeId,
+  productId,
+  optionId,
+}: {
+  storeId: string;
+  productId: string;
+  optionId: string;
+}) => {
+  const product = await readProduct({ storeId, productId });
+  if (!product) {
+    throw new Response("Product not found", { status: 404 });
+  }
+
+  const optionData = product.productOptions.optionData;
+
+  if (!optionData.hasOwnProperty(optionId)) {
+    throw new Response("Option not found", { status: 404 });
+  }
+
+  const option = optionData[optionId];
+
+  const choices = option.choiceOrder
+    .filter((choiceId) => {
+      return option.choiceData.hasOwnProperty(choiceId);
+    })
+    .map((choiceId) => {
+      const choice = option.choiceData[choiceId];
+      return choice;
+    });
+
+  const productOption = {
+    option,
+    choices,
+  };
+
+  return productOption;
+};
+
 export const getProductOptions = async ({
   storeId,
   productId,
