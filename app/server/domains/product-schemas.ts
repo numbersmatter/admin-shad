@@ -36,9 +36,30 @@ export const AddDetailSchema = z.object({
   type: z.enum(["bullet", "paragraph"]).default("bullet"),
 });
 
-export const AddOptionSchema = z.object({
+export const OptionNameSchema = z.object({
   name: z
     .string()
     .min(3, "Option Name must be at least 3 characters long.")
     .max(100),
+});
+
+export const OptionChoiceSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Choice Name must be at least 3 characters long.")
+    .max(100),
+  description: z.string().max(100),
+  priceRange: z.string(),
+  choiceId: z.string().min(3).default("addChoice"),
+});
+
+export const MoveOptionChoiceSchema = z.object({
+  _action: z.string().default("moveChoice"),
+  choiceId: z.string(),
+  direction: z.enum(["up", "down"]),
+});
+
+export const DeleteOptionChoiceSchema = z.object({
+  _action: z.string().default("deleteOptionChoice"),
+  choiceId: z.string(),
 });

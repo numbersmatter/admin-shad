@@ -32,7 +32,7 @@ import {
   ProductWorkItem,
 } from "./domain-types";
 import {
-  AddOptionSchema,
+  OptionNameSchema,
   MoveOptionSchema,
   ProductBasicsSchema,
 } from "./product-schemas";
@@ -1028,6 +1028,65 @@ export const deleteProductOptionChoice = async ({
   return { message: "Choice was deleted", choiceId };
 };
 
+export const moveOptionChoice = async ({
+  productId,
+  storeId,
+  optionId,
+  choiceId,
+  direction,
+}: {
+  productId: string;
+  storeId: string;
+  optionId: string;
+  choiceId: string;
+  direction: "up" | "down";
+}) => {
+  const product = await readProduct({ storeId, productId });
+  if (!product) {
+    throw new Response("Product not found", { status: 404 });
+  }
+
+  const option = product.productOptions.optionData[optionId];
+
+  if (!option) {
+    return { message: "Option not found" };
+  }
+
+  const choiceOrder = option.choiceOrder;
+
+  const activeIndex = choiceOrder.findIndex((id) => {
+    return choiceId === id;
+  });
+
+  if (activeIndex === -1) {
+    return { message: "Choice not found" };
+  }
+
+  const newIndex = direction === "up" ? activeIndex - 1 : activeIndex + 1;
+
+  if (newIndex < 0 || newIndex >= choiceOrder.length) {
+    return { message: "Choice not found" };
+  }
+
+  const newChoiceOrder = choiceOrder.filter((id) => {
+    return id !== choiceId;
+  });
+
+  newChoiceOrder.splice(newIndex, 0, choiceId);
+
+  const updateData = {
+    [`productOptions.optionData.${optionId}.choiceOrder`]: newChoiceOrder,
+  };
+
+  await updateProduct({
+    storeId,
+    productId,
+    updateData,
+  });
+
+  return { message: "Success" };
+};
+
 //
 // Product Form Functions
 //
@@ -1487,7 +1546,7 @@ export const addProductOptionMutation = (idData: {
   storeId: string;
   productId: string;
 }) =>
-  makeDomainFunction(AddOptionSchema)(async (values) => {
+  makeDomainFunction(OptionNameSchema)(async (values) => {
     const product = await readProduct({
       storeId: idData.storeId,
       productId: idData.productId,

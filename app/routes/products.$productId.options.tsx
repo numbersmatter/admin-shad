@@ -6,7 +6,7 @@ import { ProductOptionDialog } from "~/components/products/comp/product-option-a
 import { productOptionColumnsLong } from "~/components/products/product-options-columns";
 import { ProjectDataTable } from "~/components/projects/comp/project-data-table";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { AddOptionSchema, MoveOptionSchema } from "~/server/domains/product-schemas";
+import { OptionNameSchema, MoveOptionSchema } from "~/server/domains/product-schemas";
 import { addProductOptionMutation, getProductOptions, moveProductOptionMutation } from "~/server/domains/productDomain.server";
 
 export async function action({ params, request }: ActionFunctionArgs) {
@@ -33,7 +33,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
       const addResult = await performMutation({
         request,
         mutation: addProductOptionMutation({ storeId, productId }),
-        schema: AddOptionSchema
+        schema: OptionNameSchema
       })
       if (!addResult.success) {
         return json(addResult, 400)
