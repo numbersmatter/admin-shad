@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowBigDown, ArrowBigUp, CheckCircle, XCircleIcon } from "lucide-react";
 import { ProductActionsMenu } from "./comp/product-action-menu";
 import { useFetcher } from "@remix-run/react";
-import { ProductOptionActionMenu } from "./comp/product-option-action-menu";
+import { ProductFormActionMenu } from "./comp/product-form-action-menu";
 
 
 type ProductFormRow = {
@@ -90,7 +90,11 @@ export const productFormColLong: ColumnDef<ProductFormRow>[] = [
     id: "actions",
     cell: ({ row }) => {
       return (
-        <ProductOptionActionMenu productId={row.original.fieldId} optionId={row.original.fieldId} />
+        <ProductFormActionMenu
+          productId={row.original.fieldId}
+          fieldId={row.original.fieldId}
+        // optionId={row.original.fieldId} 
+        />
       )
     },
   },
