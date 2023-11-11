@@ -105,6 +105,7 @@ export function StandardShell({
         <div className="flex-1 flex flex-row overflow-hidden " >
           {children}
         </div>
+        <div className="h-12"></div>
       </div>
     </div>
   )

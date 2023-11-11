@@ -1148,6 +1148,60 @@ export const getProductFormData = async ({
   };
 };
 
+export const getProductFormField = async ({
+  productId,
+  storeId,
+  fieldId,
+}: {
+  productId: string;
+  storeId: string;
+  fieldId: string;
+}) => {
+  const formTemplate = await readFormTemplate({
+    storeId,
+    formTemplateId: productId,
+  });
+
+  if (!formTemplate) {
+    throw new Response("Form Template Not Found", { status: 404 });
+  }
+  if (!formTemplate.fieldData.hasOwnProperty(fieldId)) {
+    throw new Response("Field Not Found", { status: 404 });
+  }
+
+  const formPlaceholders = formTemplate?.placeholders ?? {};
+  const requiredData = formTemplate?.required ?? {};
+
+  const fieldRequired = requiredData.hasOwnProperty(fieldId)
+    ? requiredData[fieldId]
+    : { min: 0, message: "", required: false };
+  const fieldData = formTemplate.fieldData[fieldId];
+
+  const optionsObject = formTemplate?.optionsObject ?? {};
+  const optionData = optionsObject[fieldId] ?? {
+    optionOrder: [],
+    optionData: {},
+  };
+  const options = optionData.optionOrder.map((optionId) => {
+    const optionName = optionData.optionName[optionId];
+    return {
+      value: optionId,
+      name: optionName,
+    };
+  });
+
+  const fieldSettingsData: FieldSettingsData = {
+    fieldLabel: fieldData.label,
+    fieldType: fieldData.type,
+    fieldId,
+    requiredData: fieldRequired,
+    placeholder: formPlaceholders[fieldId] ?? "",
+    options,
+  };
+
+  return fieldSettingsData;
+};
+
 export const addProductFormField = async ({
   productId,
   storeId,
@@ -1400,6 +1454,9 @@ export const migrateFormTemplate = async ({
     updateData,
   });
 };
+
+//
+// Task List Functions
 
 export const getTaskListData = async ({
   productId,

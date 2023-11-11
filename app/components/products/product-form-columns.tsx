@@ -59,6 +59,9 @@ export const productFormColLong: ColumnDef<ProductFormRow>[] = [
           <p className="text-primary-foreground text-base font-semibold">
             {row.original.label}
           </p>
+          <p className="text-secondary-foreground text-base">
+            {row.original.type}
+          </p>
         </div>
       )
     },
