@@ -6,8 +6,12 @@ import {
 import { redirect } from "@remix-run/node";
 
 import { ProductOptionDisplay } from "../database/product.server";
-import { DisplayField, ProposalCard, ProposalReview } from "./domain-types";
-import { ReviewStatus } from "~/routes/review_.$reviewId";
+import {
+  DisplayField,
+  ProposalCard,
+  ProposalReview,
+  ReviewStatus,
+} from "./domain-types";
 
 const makeTagsArray = ({
   optionSelections,

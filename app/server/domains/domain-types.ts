@@ -1,4 +1,3 @@
-import { ReviewStatus } from "~/routes/review_.$reviewId";
 import { ProductOptionDisplay } from "../database/product.server";
 import { FormTemplate } from "../database/formTemplate.server";
 
@@ -68,6 +67,13 @@ export interface Tag {
   optionId?: string;
   index: number;
 }
+export type ReviewStatus =
+  | "pending"
+  | "hold"
+  | "accepted"
+  | "declined"
+  | "unset"
+  | "review";
 
 export interface ProposalCard {
   humanId: string;

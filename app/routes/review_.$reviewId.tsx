@@ -100,13 +100,6 @@ const statusOptions: StatusOption[] = [
   { title: 'Declined', description: "This idea is not for me at the moment", value: "declined" },
 ]
 
-export type ReviewStatus =
-  | "pending"
-  | "hold"
-  | "accepted"
-  | "declined"
-  | "unset"
-  | "review";
 
 
 // function StatusListBox(
