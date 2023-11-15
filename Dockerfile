@@ -2,7 +2,7 @@
 ARG NODE_VERSION=20.9.0
 # base node image
 
-FROM node:${NODE_VERSION}-bullseye-slim as base
+FROM node:20.9.0-bullseye-slim as base
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
 
