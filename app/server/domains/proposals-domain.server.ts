@@ -233,3 +233,55 @@ export const archiveProposal = async ({
     proposalId,
   };
 };
+
+export const getSortedProposals = async ({
+  storeId,
+  sortFieldArray,
+}: {
+  storeId: string;
+  sortFieldArray: ReviewStatus[];
+}) => {
+  const { proposalCards } = await getProposals({ storeId });
+
+  const validStatus = ["accepted", "declined", "hold", "review"];
+
+  const unsetReviewStatus = proposalCards.filter((proposalCard) => {
+    return !validStatus.includes(proposalCard.reviewStatus);
+  });
+
+  const validReviewStatusProposals = proposalCards.filter((proposalCard) => {
+    return validStatus.includes(proposalCard.reviewStatus);
+  });
+
+  const acceptedProposals = validReviewStatusProposals.filter(
+    (proposalCard) => {
+      return proposalCard.reviewStatus === "accepted";
+    }
+  );
+
+  const declinedProposals = validReviewStatusProposals.filter(
+    (proposalCard) => {
+      return proposalCard.reviewStatus === "declined";
+    }
+  );
+
+  const holdProposals = validReviewStatusProposals.filter((proposalCard) => {
+    return proposalCard.reviewStatus === "hold";
+  });
+
+  const reviewProposals = validReviewStatusProposals.filter((proposalCard) => {
+    return proposalCard.reviewStatus === "review";
+  });
+
+  const sortedProposals = {
+    accepted: acceptedProposals,
+    declined: declinedProposals,
+    hold: holdProposals,
+    review: reviewProposals,
+    unset: unsetReviewStatus,
+  };
+
+  return {
+    sortedProposals,
+  };
+};

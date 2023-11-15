@@ -68,7 +68,6 @@ export interface Tag {
   index: number;
 }
 export type ReviewStatus =
-  | "pending"
   | "hold"
   | "accepted"
   | "declined"

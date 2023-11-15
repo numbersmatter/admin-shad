@@ -29,22 +29,33 @@ export function ReviewListCard({
 
   const reviewStatusStyles = (status: ReviewStatus) => {
     return {
-      "pending": "text-yellow-500",
       "accepted": "text-green-500",
       "declined": "text-red-500",
       "hold": "text-yellow-500",
       "unset": "text-gray-500",
       "review": "text-yellow-500",
     }[status]
+  };
 
+  const reviewStatusDisplay = {
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "hold": "On Hold",
+    "unset": "Unset",
+    "review": "Needs Review",
   }
 
   return <Card key={request.id} className={styleClass}>
     <CardHeader className="p-3 ">
-      <CardTitle className={`${reviewStatusStyles(status)}`}>{request.productName}</CardTitle>
+      <CardTitle className={`${reviewStatusStyles(status)}`}>
+        {request.productName}
+      </CardTitle>
       <CardDescription>
         Submitted {request.submittedAtString}
       </CardDescription>
+      <p className={`${reviewStatusStyles(status)} font-semibold`}>
+        {reviewStatusDisplay[status]}
+      </p>
       <p>
         {request.humanId}
       </p>

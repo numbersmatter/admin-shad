@@ -57,6 +57,10 @@ export function ReviewProposalCard({
           <p className="text-lg font-medium">Current Status:</p>
           <ReviewStatusDropDown reviewStatus={proposalReview.reviewStatus} />
         </div>
+        <div className="flex justify-between  ">
+          <Button> Make Project</Button>
+          <Button variant={"destructive"}>Archive</Button>
+        </div>
       </CardHeader>
       <CardContent className="px-0 md:px-2">
         <ProductTags size="large" tags={proposalReview.tags} />

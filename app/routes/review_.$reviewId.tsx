@@ -1,14 +1,8 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import { Fragment, useState } from "react";
-import { DisplayResponse } from "~/components/review/comp/display-response";
-import { ProductTags } from "~/components/review/comp/product-tags";
-import { ReviewList } from "~/components/review/comp/review-list";
+import { ReviewListSorted } from "~/components/review/comp/review-list-sortable";
 import { ReviewProposalCard } from "~/components/review/comp/review-proposal-card";
-import ReviewStatusDropDown from "~/components/review/comp/review-status-dropdown";
 import { StandardShell } from "~/components/shell/shell";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { getReviewIdPageData } from "~/server/domains/proposals-domain.server";
 
@@ -65,7 +59,9 @@ export default function ReviewIdRoute() {
     <StandardShell>
       <nav id="request-list" className="hidden h-full w-full  border-muted-foreground   overflow-y-auto bg-stone-600 md:block md:border-r-4  md:w-[300px] xl:w-[350px]">
         {/* @ts-ignore */}
-        <ReviewList requests={proposalCards} />
+        <ReviewListSorted requests={proposalCards}
+          sortOrder={["unset", "review", "hold", "accepted", "declined"]}
+        />
       </nav>
       <main className=" flex-1 bg-muted overflow-y-auto ">
         <div className="container mx-auto px-0 xl:px-8 xl:py-4">
