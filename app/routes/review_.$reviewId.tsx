@@ -1,10 +1,13 @@
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs, json } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
+import { makeDomainFunction } from "domain-functions";
 import { ReviewListSorted } from "~/components/review/comp/review-list-sortable";
 import { ReviewProposalCard } from "~/components/review/comp/review-proposal-card";
 import { StandardShell } from "~/components/shell/shell";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
-import { getReviewIdPageData } from "~/server/domains/proposals-domain.server";
+import { archiveProposal, getReviewIdPageData, updateProposalReviewStatus } from "~/server/domains/proposals-domain.server";
+import { UpdateReviewStatusSchema } from "~/server/domains/proposals-schemas";
+import { formAction } from "~/server/form-actions/form-action.server";
 
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -16,11 +19,39 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     proposalReview
   } = await getReviewIdPageData({ storeId, proposalId })
 
-
-
-
   return json({ proposalCards, proposalReview });
 }
+
+export async function action({ params, request }: ActionFunctionArgs) {
+  const { storeId, uid, session } = await intializeWorkSession(request);
+  const formData = await request.clone().formData();
+  const action = formData.get("_action");
+  const updateStatus = makeDomainFunction(UpdateReviewStatusSchema)(
+    async (data) => {
+      await updateProposalReviewStatus({
+        storeId,
+        proposalId: data.proposalId,
+        reviewStatus: data.reviewStatus
+      })
+      return { message: "success" }
+    }
+  )
+
+  if (action === "updateReviewStatus") {
+    return formAction({
+      request,
+      schema: UpdateReviewStatusSchema,
+      mutation: updateStatus,
+    })
+  }
+  if (action === "archive") {
+    await archiveProposal({ storeId, proposalId: params.reviewId ?? "default" })
+    return json({ message: "proposal archived" });
+  }
+
+  return json({ message: "invalid action" });
+}
+
 
 
 
