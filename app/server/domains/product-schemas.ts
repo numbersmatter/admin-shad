@@ -64,9 +64,20 @@ export const DeleteOptionChoiceSchema = z.object({
   choiceId: z.string(),
 });
 
+const customEnumErrorMap: z.ZodErrorMap = (error, ctx) => {
+  switch (error.code) {
+    case z.ZodIssueCode.invalid_enum_value:
+      return { message: "Please select a valid option." };
+    default:
+      return { message: ctx.defaultError };
+  }
+};
+
 export const AddFormFieldSchema = z.object({
   fieldLabel: z.string().min(3).max(100),
   fieldType: z
-    .enum(["textField", "textArea", "select", "emailField", "imageUpload"])
+    .enum(["textField", "textArea", "select", "emailField", "imageUpload"], {
+      errorMap: customEnumErrorMap,
+    })
     .default("textField"),
 });

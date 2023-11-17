@@ -1,5 +1,6 @@
 import { useFetcher } from "@remix-run/react"
-import { FormEvent, useRef, useState } from "react"
+import { is } from "date-fns/locale"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import { Button } from "~/components/ui/button"
 import {
   Dialog,
@@ -14,31 +15,35 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel } from "~/components/ui/select"
 import { Textarea } from "~/components/ui/textarea"
+import { toast } from "~/components/ui/use-toast"
+import { action } from "~/routes/_index"
+import { StandardAPIResponse } from "~/server/domains/api-interfaces"
+
+
 
 export function ProductAddFormField({
-  // buttonLabel,
-  // dialogTitle,
-  // dialogDescription,
-  // inputLabel,
-  // inputId,
-  // inputDefaultValue,
-  // saveLabel,
-  // _action,
-  // textarea,
 }: {
-    // buttonLabel: string,
-    // dialogTitle: string,
-    // dialogDescription: string,
-    // inputLabel: string,
-    // inputId: string,
-    // inputDefaultValue: string,
-    // saveLabel: string,
-    // _action: string,
-    // textarea?: boolean,
   }) {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<StandardAPIResponse>();
   const formRef = useRef<HTMLFormElement>(null);
   const [open, setOpen] = useState(false);
+
+  const formData = fetcher.formData;
+  const isFormData = formData !== undefined;
+  const isSaving = fetcher.state !== "idle" && isFormData
+  const actionData = fetcher.data;
+  const success = actionData ? actionData.success : false;
+  const isError = actionData ? !actionData.success : false;
+
+
+  useEffect(() => {
+    if (isError) {
+      toast({ title: "Error Occurred", description: "Error Occurred" });
+    }
+
+  }, [isSaving, success])
+
+
 
   const handleSaveChanges = (e: FormEvent) => {
     // @ts-ignore
@@ -63,18 +68,33 @@ export function ProductAddFormField({
               Add form field
             </DialogDescription>
           </DialogHeader>
+          {
+            isError &&
+            <div
+              className="mx-3 my-3 px-2 py-2 rounded-lg border border-red-600 bg-red-300 text-red-700"
+            >
+              <h5>Errors</h5>
+            </div>
+          }
           <div className="grid gap-4 py-4">
             <div className="grid-cols-1 space-y-2 md:grid-cols-4 md:gap-4  items-center ">
               <Label htmlFor="fieldLabel" className="text-right">
                 field label
               </Label>
-
               <Input
                 id={"fieldLabel"}
                 name="fieldLabel"
                 defaultValue={""}
                 className="col-span-3"
               />
+              {
+                isError &&
+                <div className="col-span-full text-red-600">
+                  {actionData?.errors?.fieldLabel}
+                </div>
+              }
+
+
             </div>
             <div className="grid-cols-1 space-y-2 md:grid-cols-4 md:gap-4  items-center ">
 
@@ -95,6 +115,12 @@ export function ProductAddFormField({
                 </SelectContent>
               </Select>
             </div>
+            {
+              isError &&
+              <div className="col-span-full text-red-600">
+                {actionData?.errors?.fieldType}
+              </div>
+            }
 
           </div>
           <DialogFooter>

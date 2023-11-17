@@ -1,12 +1,31 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { makeDomainFunction } from "domain-functions";
+import { ProductFormTextFieldEdit } from "~/components/products/comp/product-form-text-field-edit";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { intializeWorkSession } from "~/server/auth/auth-work-session.server";
 import { getProductFormData, getProductFormField } from "~/server/domains/productDomain.server";
 
 export async function action({ params, request }: ActionFunctionArgs) {
   const { storeId } = await intializeWorkSession(request);
+  const productId = params.productId ?? "undefined";
+  const fieldId = params.fieldId ?? "undefined";
+  const formData = await request.clone().formData();
+  const action = formData.get("_action") ?? undefined;
+
+  const updateFieldMutation = makeDomainFunction()(
+    async (data) => {
+
+    }
+  )
+
+
+  if (action === "update") {
+
+    return redirect(`/products/${productId}/form`);
+  }
+
 
   return json({});
 }
@@ -26,12 +45,10 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
 
 
-export default function RouteName() {
+export default function FormFieldId() {
   const { fieldData } = useLoaderData<typeof loader>();
   return (
     <main className="">
-      <h1>Product Form Field</h1>
-      <pre>{JSON.stringify(fieldData, null, 2)}</pre>
       <Card>
         <CardHeader>
           <CardTitle>
@@ -40,6 +57,13 @@ export default function RouteName() {
           <CardDescription>
             {fieldData.fieldType}
           </CardDescription>
+          <div className="flex flex-row justify-between">
+            <ProductFormTextFieldEdit
+              fieldLabel={fieldData.fieldLabel}
+              placeholder={fieldData.placeholder}
+              requiredData={fieldData.requiredData}
+            />
+          </div>
         </CardHeader>
         <CardContent>
           <p>
@@ -79,8 +103,8 @@ export default function RouteName() {
             </ul>
           </div>
         </CardContent>
-
       </Card>
+      <pre>{JSON.stringify(fieldData, null, 2)}</pre>
     </main>
   );
 }
