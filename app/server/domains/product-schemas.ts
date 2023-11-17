@@ -63,3 +63,10 @@ export const DeleteOptionChoiceSchema = z.object({
   _action: z.string().default("deleteOptionChoice"),
   choiceId: z.string(),
 });
+
+export const AddFormFieldSchema = z.object({
+  fieldLabel: z.string().min(3).max(100),
+  fieldType: z
+    .enum(["textField", "textArea", "select", "emailField", "imageUpload"])
+    .default("textField"),
+});

@@ -1209,12 +1209,15 @@ export const addProductFormField = async ({
 }: {
   productId: string;
   storeId: string;
-  fieldData: FormTemplateField;
+  fieldData: {
+    label: string;
+    fieldType: FieldType;
+  };
 }) => {
   const fieldId = randomId();
 
   const saveFieldData: FormTemplateField = {
-    type: fieldData.type,
+    type: fieldData.fieldType,
     label: fieldData.label,
     id: fieldId,
   };
