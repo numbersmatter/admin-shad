@@ -64,6 +64,11 @@ export const DeleteOptionChoiceSchema = z.object({
   choiceId: z.string(),
 });
 
+export const DeleteItemSchema = z.object({
+  _action: z.string().default("deleteItem"),
+  id: z.string(),
+});
+
 const customEnumErrorMap: z.ZodErrorMap = (error, ctx) => {
   switch (error.code) {
     case z.ZodIssueCode.invalid_enum_value:
@@ -73,6 +78,12 @@ const customEnumErrorMap: z.ZodErrorMap = (error, ctx) => {
   }
 };
 
+export const MoveUpDownSchema = z.object({
+  _action: z.string().default("moveUpDown"),
+  direction: z.enum(["up", "down"]),
+  id: z.string(),
+});
+
 export const AddFormFieldSchema = z.object({
   fieldLabel: z.string().min(3).max(100),
   fieldType: z
@@ -80,4 +91,8 @@ export const AddFormFieldSchema = z.object({
       errorMap: customEnumErrorMap,
     })
     .default("textField"),
+});
+
+export const ChangeFieldLabelSchema = z.object({
+  fieldLabel: z.string().min(3).max(100),
 });

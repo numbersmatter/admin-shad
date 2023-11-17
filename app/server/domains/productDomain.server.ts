@@ -1348,7 +1348,7 @@ export const deleteSelectOption = async ({
   });
 };
 
-export const ChangeFormFieldName = async ({
+export const changeFormFieldName = async ({
   productId,
   storeId,
   fieldId,

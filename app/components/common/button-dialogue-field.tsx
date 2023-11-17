@@ -13,6 +13,7 @@ import {
 import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { toast } from "../ui/use-toast"
+import { StandardAPIResponse } from "~/server/domains/api-interfaces"
 
 export function ButtonDialogField({
   buttonLabel,
@@ -33,7 +34,7 @@ export function ButtonDialogField({
   saveLabel: string,
   _action: string,
 }) {
-  const fetcher = useFetcher<any>();
+  const fetcher = useFetcher<StandardAPIResponse>();
   const formRef = useRef<HTMLFormElement>(null);
   const [open, setOpen] = useState(false);
   const formData = fetcher.formData;
@@ -54,7 +55,7 @@ export function ButtonDialogField({
 
   useEffect(() => {
     if (success && !isSaving) {
-      toast({ title: "Updated Saved", description: "" });
+      toast({ title: "Updated Saved", description: "Your changes have been saved" });
       setOpen(false);
     }
 
